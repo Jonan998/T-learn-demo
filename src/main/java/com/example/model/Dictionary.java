@@ -1,8 +1,8 @@
 package com.example.model;
 
-
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "dictionary")
@@ -11,13 +11,17 @@ public class Dictionary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
     private String description;
     private String language;
 
+    @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
+    private List<Cards_words> cardsWords = new ArrayList<>();
+
     public Dictionary(){}
 
-    public Dictionary(String name,String description, String language){
+    public Dictionary(String name, String description, String language){
         this.name = name;
         this.description = description;
         this.language = language;
@@ -34,4 +38,7 @@ public class Dictionary {
 
     public String getLanguage(){return language;}
     public void setLanguage(String language){this.language = language;}
+
+    public List<Cards_words> getCardsWords() { return cardsWords; }
+    public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
 }

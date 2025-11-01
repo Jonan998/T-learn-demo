@@ -20,11 +20,10 @@ public class Cards_wordsController {
                                   @RequestParam int dictionary_id,
                                   @RequestParam int study_lvl,
                                   @RequestParam LocalDate next_review) {
-
         service.createCards_words(user_id, word_id, dictionary_id, study_lvl, next_review);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping("/{id}")
     public Cards_words getCards_words(@PathVariable int id) {
         return service.getCards_words(id);
     }

@@ -2,6 +2,10 @@ package com.example.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 @Entity
 @Table(name = "words")
 public class Word {
@@ -13,6 +17,9 @@ public class Word {
     private String engLang;
     private String rusLang;
     private String transcription;
+
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    private List<Cards_words> cardsWords = new ArrayList<>();
 
     public Word() {}
 
@@ -32,4 +39,7 @@ public class Word {
 
     public String getTranscription(){return transcription;}
     public void setTranscription(String transcription){this.transcription = transcription;}
+
+    public List<Cards_words> getCardsWords() { return cardsWords; }
+    public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
 }

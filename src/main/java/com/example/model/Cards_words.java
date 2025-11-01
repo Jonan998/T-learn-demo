@@ -1,8 +1,6 @@
 package com.example.model;
 
-
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -11,37 +9,61 @@ public class Cards_words {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int user_id;
-    private int word_id;
-    private int dictionary_id;
-    private int study_lvl;
-    private LocalDate next_review;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "word_id")
+    private Word word;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dictionary_id")
+    private Dictionary dictionary;
+
+    @Column(name = "study_lvl")
+    private Integer studyLevel;
+
+    @Column(name = "next_review")
+    private LocalDate nextReview;
 
     public Cards_words() {}
 
-    public Cards_words(int user_id, int word_id,int dictionary_id,int study_lvl, LocalDate next_review){
-        this.user_id = user_id;
-        this.word_id = word_id;
-        this.dictionary_id = dictionary_id;
-        this.study_lvl = study_lvl;
-        this.next_review = next_review;
+    public Cards_words(User user, Word word, Dictionary dictionary, Integer studyLevel, LocalDate nextReview) {
+        this.user = user;
+        this.word = word;
+        this.dictionary = dictionary;
+        this.studyLevel = studyLevel;
+        this.nextReview = nextReview;
     }
 
-    public Integer getId(){return id;}
-    public void setId(Integer id){this.id = id;}
+    public Cards_words(Integer user_id, Integer word_id, Integer dictionary_id, Integer studyLevel, LocalDate nextReview) {
+        this.user = new User();
+        this.user.setId(user_id);
+        this.word = new Word();
+        this.word.setId(word_id);
+        this.dictionary = new Dictionary();
+        this.dictionary.setId(dictionary_id);
+        this.studyLevel = studyLevel;
+        this.nextReview = nextReview;
+    }
 
-    public Integer getUserId(){return user_id;}
-    public void setUser_id(int user_id){this.user_id = user_id;}
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public int getWord_id(){return word_id;}
-    public void setWord_id(int word_id){this.word_id = word_id;}
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public int getDictionary_id(){return  dictionary_id;}
-    public void setDictionary_id(int dictionary_id) {this.dictionary_id = dictionary_id;}
+    public Word getWord() { return word; }
+    public void setWord(Word word) { this.word = word; }
 
-    public int getStudy_lvl() {return study_lvl;}
-    public void setStudy_lvl(int study_lvl) {this.study_lvl = study_lvl;}
+    public Dictionary getDictionary() { return dictionary; }
+    public void setDictionary(Dictionary dictionary) { this.dictionary = dictionary; }
 
-    public LocalDate getNext_review() {return next_review;}
-    public void setNext_review(LocalDate next_review) {this.next_review = next_review;}
+    public Integer getStudyLevel() { return studyLevel; }
+    public void setStudyLevel(Integer studyLevel) { this.studyLevel = studyLevel; }
+
+    public LocalDate getNextReview() { return nextReview; }
+    public void setNextReview(LocalDate nextReview) { this.nextReview = nextReview; }
 }
