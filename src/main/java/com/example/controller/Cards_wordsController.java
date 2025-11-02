@@ -23,7 +23,7 @@ public class Cards_wordsController {
         service.createCards_words(user_id, word_id, dictionary_id, study_lvl, next_review);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
     public Cards_words getCards_words(@PathVariable int id) {
         return service.getCards_words(id);
     }

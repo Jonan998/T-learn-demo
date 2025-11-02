@@ -20,7 +20,7 @@ public class Dictionary_wordsController {
         service.createDictionary_words(word_id,dictionary_id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
     public Dictionary_words getDictionary_words(@PathVariable int id){
         return service.getDictionary_words(id);
     }

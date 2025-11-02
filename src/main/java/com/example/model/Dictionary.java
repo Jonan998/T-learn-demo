@@ -22,6 +22,9 @@ public class Dictionary {
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
     private List<Dictionary_words> dictionaryWords = new ArrayList<>();
 
+    @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
+    private List<Users_dictionaries> usersDictionaries = new ArrayList<>();
+
     public Dictionary(){}
 
     public Dictionary(String name, String description, String language){
@@ -47,4 +50,7 @@ public class Dictionary {
 
     public List<Dictionary_words> getDictionaryWords() { return dictionaryWords; }
     public void setDictionaryWords(List<Dictionary_words> dictionaryWords) {this.dictionaryWords = dictionaryWords;}
+
+    public List<Users_dictionaries> getUsersDictionaries() {return usersDictionaries;}
+    public void setUsersDictionaries(List<Users_dictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
 }

@@ -20,6 +20,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Cards_words> cardsWords = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Users_dictionaries> usersDictionaries = new ArrayList<>();
+
     public User() {}
 
     public User(String name, String password) {
@@ -37,4 +40,7 @@ public class User {
 
     public List<Cards_words> getCardsWords() { return cardsWords; }
     public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
+
+    public List<Users_dictionaries> getUsersDictionaries() {return usersDictionaries;}
+    public void setUsersDictionaries(List<Users_dictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
 }
