@@ -38,16 +38,6 @@ public class Cards_words {
         this.nextReview = nextReview;
     }
 
-    public Cards_words(Integer user_id, Integer word_id, Integer dictionary_id, Integer studyLevel, LocalDate nextReview) {
-        this.user = new User();
-        this.user.setId(user_id);
-        this.word = new Word();
-        this.word.setId(word_id);
-        this.dictionary = new Dictionary();
-        this.dictionary.setId(dictionary_id);
-        this.studyLevel = studyLevel;
-        this.nextReview = nextReview;
-    }
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
