@@ -27,7 +27,7 @@ public class Cards_wordsServiceImpl implements Cards_wordsService {
 
     @Override
     public Cards_words getCards_words(int cards_wordsId) {
-        return cardsWordsRepository.findById(cards_wordsId).orElse(null);
+        return cardsWordsRepository.getByIdCardWords(cards_wordsId).orElse(null);
     }
 
     @Override

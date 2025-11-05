@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,15 @@ public class Dictionary {
     private String language;
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Cards_words> cardsWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Dictionary_words> dictionaryWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Users_dictionaries> usersDictionaries = new ArrayList<>();
 
     public Dictionary(){}

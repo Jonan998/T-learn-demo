@@ -24,7 +24,7 @@ public class Users_dictionariesServiceImpl implements Users_dictionariesService{
 
     @Override
     public Users_dictionaries getUsers_dictionaries(int users_dictionariesId){
-        return repository.findById(users_dictionariesId).orElse(null);
+        return repository.getByIdUsersDict(users_dictionariesId).orElse(null);
     }
 
     @Override
