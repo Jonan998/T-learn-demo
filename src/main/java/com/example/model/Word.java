@@ -35,7 +35,7 @@ public class Word {
         this.transcription = transcription;
     }
 
-    // Исправленные геттеры и сеттеры согласно конвенциям Java Bean
+    
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
