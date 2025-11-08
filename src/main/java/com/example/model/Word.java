@@ -53,3 +53,4 @@ public class Word {
     public List<DictionaryWords> getDictionaryWords() { return dictionaryWords; }
     public void setDictionaryWords(List<DictionaryWords> dictionaryWords) { this.dictionaryWords = dictionaryWords; }
 }
+
