@@ -10,11 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> {
-    @Query("SELECT cw FROM Cards_words cw " +
-            "JOIN FETCH cw.user " +
-            "JOIN FETCH cw.word " +
-            "JOIN FETCH cw.dictionary " +
-            "WHERE cw.id = :id"
-    )
+    @Query("SELECT cw FROM CardsWords cw JOIN FETCH cw.user JOIN FETCH cw.word JOIN FETCH cw.dictionary WHERE cw.id = :id")
     Optional<CardsWords> getByIdCardWords(@Param("id") Integer id);
 }

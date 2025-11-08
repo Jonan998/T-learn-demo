@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users_dictionaries")
-public class Users_dictionariesController {
+public class UsersDictionariesController {
     private final UsersDictionariesServiceImpl service;
 
-    public Users_dictionariesController(UsersDictionariesServiceImpl service){
+    public UsersDictionariesController(UsersDictionariesServiceImpl service){
         this.service = service;
     }
 

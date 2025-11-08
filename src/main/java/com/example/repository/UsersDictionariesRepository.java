@@ -10,11 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UsersDictionariesRepository extends JpaRepository<UsersDictionaries,Integer> {
-    @Query(
-            "SELECT ud FROM Users_dictionaries ud " +
-                    "JOIN FETCH ud.user " +
-                    "JOIN FETCH ud.dictionary " +
-                    "WHERE ud.id = :id"
-    )
+    @Query("SELECT ud FROM UsersDictionaries ud JOIN FETCH ud.user JOIN FETCH ud.dictionary WHERE ud.id = :id")
     Optional<UsersDictionaries> getByIdUsersDict(@Param("id") Integer id);
 }

@@ -10,9 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface DictionaryWordsRepository extends JpaRepository<DictionaryWords,Integer> {
-    @Query("SELECT dw FROM Dictionary_words dw " +
-            "JOIN FETCH dw.word " +
-            "JOIN FETCH dw.dictionary " +
-            "WHERE dw.id = :id")
+    @Query("SELECT dw FROM DictionaryWords dw JOIN FETCH dw.word JOIN FETCH dw.dictionary WHERE dw.id = :id")
     Optional<DictionaryWords> findByIdDict(@Param("id") Integer id);
 }
