@@ -1,7 +1,6 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +20,16 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Cards_words> cardsWords = new ArrayList<>();
+    private List<CardsWords> cardsWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Users_dictionaries> usersDictionaries = new ArrayList<>();
+    private List<UsersDictionaries> usersDictionaries = new ArrayList<>();
 
     public User() {}
 
-    public User(String name, String password) {
+    public User(String name,
+                String password) {
         this.name = name;
         this.password = password;
     }
@@ -42,9 +42,9 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public List<Cards_words> getCardsWords() { return cardsWords; }
-    public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
+    public List<CardsWords> getCardsWords() { return cardsWords; }
+    public void setCardsWords(List<CardsWords> cardsWords) { this.cardsWords = cardsWords; }
 
-    public List<Users_dictionaries> getUsersDictionaries() {return usersDictionaries;}
-    public void setUsersDictionaries(List<Users_dictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
+    public List<UsersDictionaries> getUsersDictionaries() {return usersDictionaries;}
+    public void setUsersDictionaries(List<UsersDictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
 }

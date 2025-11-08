@@ -5,11 +5,9 @@ import com.example.service.WordServiceImpl;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/words")
 public class WordController {
-
     private final WordServiceImpl service;
 
     public WordController(WordServiceImpl service) {
@@ -18,8 +16,8 @@ public class WordController {
 
     @PostMapping
     public void createWord(@RequestParam String eng,
-                             @RequestParam String rus,
-                             @RequestParam String transcription) {
+                           @RequestParam String rus,
+                           @RequestParam String transcription) {
         service.createWord(eng, rus, transcription);
     }
 
@@ -31,6 +29,6 @@ public class WordController {
     @GetMapping(value = "/random/{count}", produces = "application/json; charset=UTF-8")
     public List<Word> getRandWords(
             @PathVariable("count") int count) {
-        return service.GetRandWords(count);
+        return service.getRandWords(count);
     }
 }

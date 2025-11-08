@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "cards_words")
-public class Cards_words {
+public class CardsWords {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -28,9 +28,13 @@ public class Cards_words {
     @Column(name = "next_review")
     private LocalDate nextReview;
 
-    public Cards_words() {}
+    public CardsWords() {}
 
-    public Cards_words(User user, Word word, Dictionary dictionary, Integer studyLevel, LocalDate nextReview) {
+    public CardsWords(User user,
+                      Word word,
+                      Dictionary dictionary,
+                      Integer studyLevel,
+                      LocalDate nextReview) {
         this.user = user;
         this.word = word;
         this.dictionary = dictionary;

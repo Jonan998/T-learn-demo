@@ -19,12 +19,16 @@ public class WordServiceImpl implements WordService {
     public Word getWord(int wordid) {
         return repository.findById(wordid).orElse(null);
     }
+
     @Override
-    public void createWord(String eng, String rus, String transcription) {
+    public void createWord(String eng,
+                           String rus,
+                           String transcription) {
         repository.save(new Word(eng, rus, transcription));
     }
+
     @Override
-    public List<Word> GetRandWords(int limit){
+    public List<Word> getRandWords(int limit){
         return repository.GetWords(limit);
     }
 }

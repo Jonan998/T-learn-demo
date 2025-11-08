@@ -1,7 +1,6 @@
 package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 @Entity
 @Table(name = "words")
 public class Word {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -21,21 +19,22 @@ public class Word {
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Cards_words> cardsWords = new ArrayList<>();
+    private List<CardsWords> cardsWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Dictionary_words> dictionaryWords = new ArrayList<>();
+    private List<DictionaryWords> dictionaryWords = new ArrayList<>();
 
     public Word() {}
 
-    public Word(String engLang, String rusLang, String transcription) {
+    public Word(String engLang,
+                String rusLang,
+                String transcription) {
         this.engLang = engLang;
         this.rusLang = rusLang;
         this.transcription = transcription;
     }
 
-    // Исправленные геттеры и сеттеры согласно конвенциям Java Bean
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -48,9 +47,9 @@ public class Word {
     public String getTranscription() { return transcription; }
     public void setTranscription(String transcription) { this.transcription = transcription; }
 
-    public List<Cards_words> getCardsWords() { return cardsWords; }
-    public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
+    public List<CardsWords> getCardsWords() { return cardsWords; }
+    public void setCardsWords(List<CardsWords> cardsWords) { this.cardsWords = cardsWords; }
 
-    public List<Dictionary_words> getDictionaryWords() { return dictionaryWords; }
-    public void setDictionaryWords(List<Dictionary_words> dictionaryWords) { this.dictionaryWords = dictionaryWords; }
+    public List<DictionaryWords> getDictionaryWords() { return dictionaryWords; }
+    public void setDictionaryWords(List<DictionaryWords> dictionaryWords) { this.dictionaryWords = dictionaryWords; }
 }

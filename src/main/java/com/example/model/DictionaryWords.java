@@ -1,26 +1,27 @@
 package com.example.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dictionary_words")
-public class Dictionary_words {
+public class DictionaryWords {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "word_id")
     private Word word;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
 
-    public Dictionary_words(){}
+    public DictionaryWords(){}
 
-    public Dictionary_words(Word word,Dictionary dictionary){
+    public DictionaryWords(Word word,
+                           Dictionary dictionary){
         this.dictionary = dictionary;
         this.word = word;
     }

@@ -1,17 +1,18 @@
 package com.example.model;
 
-
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users_dictionaries")
-public class Users_dictionaries {
+public class UsersDictionaries {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
@@ -19,9 +20,12 @@ public class Users_dictionaries {
     private String is_active;
     private int progress;
 
-    public Users_dictionaries() {}
+    public UsersDictionaries() {}
 
-    public Users_dictionaries(User user,Dictionary dictionary, String is_active, int progress){
+    public UsersDictionaries(User user,
+                             Dictionary dictionary,
+                             String is_active,
+                             int progress){
         this.user = user;
         this.dictionary = dictionary;
         this.is_active = is_active;
@@ -41,6 +45,5 @@ public class Users_dictionaries {
     public void setIs_active(String is_active) {this.is_active = is_active;}
 
     public int getProgress() {return progress;}
-
     public void setProgress(int progress) {this.progress = progress;}
 }

@@ -1,6 +1,5 @@
 package com.example.controller;
 
-
 import com.example.model.Dictionary;
 import com.example.service.DictionaryServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +19,7 @@ public class DictionaryController {
                                  @RequestParam String language){
         service.createDictionary(name, description, language);
     }
+
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
     public Dictionary getDictionary(@PathVariable int id){
         return service.getDictionary(id);

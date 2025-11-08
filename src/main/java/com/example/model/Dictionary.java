@@ -8,7 +8,6 @@ import java.util.List;
 @Entity
 @Table(name = "dictionary")
 public class Dictionary {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,19 +18,21 @@ public class Dictionary {
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Cards_words> cardsWords = new ArrayList<>();
+    private List<CardsWords> cardsWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Dictionary_words> dictionaryWords = new ArrayList<>();
+    private List<DictionaryWords> dictionaryWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Users_dictionaries> usersDictionaries = new ArrayList<>();
+    private List<UsersDictionaries> usersDictionaries = new ArrayList<>();
 
     public Dictionary(){}
 
-    public Dictionary(String name, String description, String language){
+    public Dictionary(String name,
+                      String description,
+                      String language){
         this.name = name;
         this.description = description;
         this.language = language;
@@ -49,12 +50,12 @@ public class Dictionary {
     public String getLanguage(){return language;}
     public void setLanguage(String language){this.language = language;}
 
-    public List<Cards_words> getCardsWords() { return cardsWords; }
-    public void setCardsWords(List<Cards_words> cardsWords) { this.cardsWords = cardsWords; }
+    public List<CardsWords> getCardsWords() { return cardsWords; }
+    public void setCardsWords(List<CardsWords> cardsWords) { this.cardsWords = cardsWords; }
 
-    public List<Dictionary_words> getDictionaryWords() { return dictionaryWords; }
-    public void setDictionaryWords(List<Dictionary_words> dictionaryWords) {this.dictionaryWords = dictionaryWords;}
+    public List<DictionaryWords> getDictionaryWords() { return dictionaryWords; }
+    public void setDictionaryWords(List<DictionaryWords> dictionaryWords) {this.dictionaryWords = dictionaryWords;}
 
-    public List<Users_dictionaries> getUsersDictionaries() {return usersDictionaries;}
-    public void setUsersDictionaries(List<Users_dictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
+    public List<UsersDictionaries> getUsersDictionaries() {return usersDictionaries;}
+    public void setUsersDictionaries(List<UsersDictionaries> usersDictionaries) {this.usersDictionaries = usersDictionaries;}
 }

@@ -1,30 +1,30 @@
 package com.example.controller;
 
-import com.example.model.Cards_words;
-import com.example.service.Cards_wordsService;
+import com.example.model.CardsWords;
+import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/cards_words")
-public class Cards_wordsController {
-    private final Cards_wordsService service;
+public class CardsWordsController {
+    private final CardsWordsService service;
 
-    public Cards_wordsController(Cards_wordsService service) {
+    public CardsWordsController(CardsWordsService service) {
         this.service = service;
     }
 
     @PostMapping
-    public void createCards_words(@RequestParam int user_id,
+    public void createCardsWords(@RequestParam int user_id,
                                   @RequestParam int word_id,
                                   @RequestParam int dictionary_id,
                                   @RequestParam int study_lvl,
                                   @RequestParam LocalDate next_review) {
-        service.createCards_words(user_id, word_id, dictionary_id, study_lvl, next_review);
+        service.createCardsWords(user_id, word_id, dictionary_id, study_lvl, next_review);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public Cards_words getCards_words(@PathVariable int id) {
-        return service.getCards_words(id);
+    public CardsWords getCardsWords(@PathVariable int id) {
+        return service.getCardsWords(id);
     }
 }
