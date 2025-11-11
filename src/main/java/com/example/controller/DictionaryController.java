@@ -1,15 +1,17 @@
 package com.example.controller;
 
+import com.example.dto.DictionaryDto;
 import com.example.model.Dictionary;
+import com.example.service.DictionaryService;
 import com.example.service.DictionaryServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/dictionary")
 public class DictionaryController {
-    private final DictionaryServiceImpl service;
+    private final DictionaryService service;
 
-    public DictionaryController(DictionaryServiceImpl service){
+    public DictionaryController(DictionaryService service){
         this.service = service;
     }
 
@@ -21,7 +23,7 @@ public class DictionaryController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public Dictionary getDictionary(@PathVariable int id){
+    public DictionaryDto getDictionary(@PathVariable int id){
         return service.getDictionary(id);
     }
 }

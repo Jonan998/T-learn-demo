@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.DictionaryWordsDto;
 import com.example.model.DictionaryWords;
 import com.example.service.DictionaryWordsService;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class DictionaryWordsController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public DictionaryWords getDictionary_words(@PathVariable int id) {
+    public DictionaryWordsDto getDictionary_words(@PathVariable int id) {
             return service.getDictionaryWords(id);
     }
 }

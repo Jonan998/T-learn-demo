@@ -30,7 +30,7 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public List<WordDto> getRandWords(int limit) {
-        List<Word> words = repository.GetWords(limit);
+        List<Word> words = repository.getWords(limit);
         return wordMapper.toDtoList(words);
     }
     

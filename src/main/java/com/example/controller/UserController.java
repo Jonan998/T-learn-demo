@@ -1,15 +1,17 @@
 package com.example.controller;
 
+import com.example.dto.UserDto;
 import com.example.model.User;
+import com.example.service.UserService;
 import com.example.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserServiceImpl service;
+    private final UserService service;
 
-    public UserController(UserServiceImpl service){
+    public UserController(UserService service){
         this.service = service;
     }
 
@@ -20,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public User getUser(@PathVariable int id){
+    public UserDto getUser(@PathVariable int id){
         return service.getUser(id);
     }
 }

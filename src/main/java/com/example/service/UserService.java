@@ -1,8 +1,9 @@
 package com.example.service;
 
+import com.example.dto.UserDto;
 import com.example.model.User;
 
 public interface UserService {
-    User getUser(int userId);
+    UserDto getUser(int userId);
     void createUser(String name, String password);
 }

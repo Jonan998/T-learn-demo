@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.CardsWordsDto;
 import com.example.model.CardsWords;
 import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class CardsWordsController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
-    public CardsWords getCardsWords(@PathVariable int id) {
+    public CardsWordsDto getCardsWords(@PathVariable int id) {
         return service.getCardsWords(id);
     }
 }
