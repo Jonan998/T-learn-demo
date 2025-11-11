@@ -6,6 +6,8 @@ import com.example.service.UserService;
 import com.example.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -17,8 +19,12 @@ public class UserController {
 
     @PostMapping
     public void createUser(@RequestParam String name,
-                           @RequestParam String password){
-        service.createUser(name, password);
+                           @RequestParam String password,
+                           @RequestParam LocalDate created_at_new,
+                           @RequestParam LocalDate created_at_repeat,
+                           @RequestParam int limit_new,
+                           @RequestParam int limit_repeat){
+        service.createUser(name, password,created_at_new,created_at_repeat,limit_new,limit_repeat);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
