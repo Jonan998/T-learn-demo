@@ -21,4 +21,9 @@ public class DeckController {
         return deckService.getNewDeck(userId);
     }
 
+    @GetMapping(value = "/repeat", produces = "application/json; charset=UTF-8")
+    public List<WordDto> getRepeatWords(@RequestParam("user_id") Integer userId) {
+        return deckService.getRepeatDeck(userId);
+    }
+
 }

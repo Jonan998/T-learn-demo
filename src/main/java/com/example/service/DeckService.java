@@ -67,8 +67,8 @@ public class DeckService {
             Dictionary dictionary = dictionaryRepository.findById(dictionaryId)
                     .orElseThrow(() -> new RuntimeException("Dictionary not found: " + dictionaryId));
 
-            cards.add(new CardsWords(user, word, dictionary, 0, LocalDate.now()));
-            deck.add(new WordDto(wordId, eng, rus, transcription));
+            cards.add(new CardsWords(user, word, dictionary, 1, LocalDate.now().minusWeeks(2)));
+            deck.add(new WordDto(wordId,0, eng, rus, transcription));
         }
 
 
@@ -77,5 +77,36 @@ public class DeckService {
 
         return deck;
     }
+
+    public List<WordDto> getRepeatDeck(int user_id){
+        String key = "user:" + user_id + ":deck_repeat";
+
+        List<WordDto> cached = (List<WordDto>) redisTemplate.opsForValue().get(key);
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+
+        User user = userRepository.findById(user_id).orElseThrow();
+        int limit = user.getLimit_repeat();
+
+        List<Object[]> rows = cardsWordsRepository.getRepeatDeckWords(user_id, limit);
+
+        List<WordDto> deck = new ArrayList<>();
+
+        for (Object[] row : rows){
+            Integer wordId = ((Number) row[0]).intValue();
+            int study_lvl = ((Number) row[1]).intValue();
+            String eng = row[2] != null ? row[2].toString() : "";
+            String rus = row[3] != null ? row[3].toString() : "";
+            String transcription = row[4] != null ? row[4].toString() : "";
+
+            deck.add(new WordDto(wordId, study_lvl, eng, rus, transcription));
+        }
+
+        redisTemplate.opsForValue().set(key, deck, Duration.ofHours(12));
+
+        return deck;
+    }
+
 
 }
