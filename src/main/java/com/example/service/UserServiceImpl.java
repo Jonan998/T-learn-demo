@@ -30,14 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createUser(String name, String password, LocalDate created_at_new, LocalDate created_at_repeat, int limit_new, int limit_repeat) {
+    public void createUser(String name, String password, LocalDate createdAtNew, LocalDate createdAtRepeat, int limitNew, int limitRepeat) {
         String encodedPassword = passwordEncoder.encode(password);
-        repository.save(new User(name, encodedPassword,created_at_new,created_at_repeat,limit_new,limit_repeat));
+        repository.save(new User(name, encodedPassword,createdAtNew,createdAtRepeat,limitNew,limitRepeat));
     }
     
     public UserDto createUser(UserDto userDto, String rawPassword) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        User user = new User(userDto.getName(), encodedPassword, userDto.getCreated_at_new(),userDto.getCreated_at_repeat(),userDto.getLimit_new(),userDto.getLimit_repeat());
+        User user = new User(userDto.getName(), encodedPassword, userDto.getCreatedAtNew(),userDto.getCreatedAtRepeat(),userDto.getLimitNew(),userDto.getLimitRepeat());
         User savedUser = repository.save(user);
         return userMapper.toDto(savedUser);
     }

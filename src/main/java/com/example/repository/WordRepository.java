@@ -22,11 +22,12 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     List<Word> getWords(@Param("limit") int count);
 
     @Query(value = """
-    SELECT w.id AS id,
-           w.eng_lang AS engLang,      
-           w.rus_lang AS rusLang,       
-           w.transcription AS transcription,
-           dw.dictionary_id AS dictionaryId
+    SELECT 
+        w.id AS id,
+        0 AS study_lvl,            -- здесь ставим вторым поле study_lvl
+        w.eng_lang AS engLang,
+        w.rus_lang AS rusLang,
+        w.transcription AS transcription
     FROM words w
     JOIN dictionary_words dw ON w.id = dw.word_id
     WHERE w.id NOT IN (
@@ -35,8 +36,14 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     ORDER BY RANDOM()
     LIMIT :limit
 """, nativeQuery = true)
-//    List<WordDto> getNewDeckWords(@Param("userId") int userId, @Param("limit") int limit);
-    List<Object[]> getNewDeckWords(@Param("userId") int userId, @Param("limit") int limit);
-
+    List<WordDto> getNewDeckWords(@Param("userId") int userId,
+                                  @Param("limit") int limit);
+    @Query(value = """
+    SELECT dw.dictionary_id
+    FROM dictionary_words dw
+    WHERE dw.word_id = :wordId
+    LIMIT 1
+""", nativeQuery = true)
+    Integer findDictionaryId(@Param("wordId") Integer wordId);
 
 }

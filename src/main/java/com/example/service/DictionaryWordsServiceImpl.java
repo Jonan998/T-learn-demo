@@ -32,9 +32,9 @@ public class DictionaryWordsServiceImpl implements DictionaryWordsService {
 
     @Override
     @Transactional
-    public void createDictionaryWords(int word_id, int dictionary_id) {
-        Optional<Word> word = wordRepository.findById(word_id);
-        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionary_id);
+    public void createDictionaryWords(int wordId, int dictionaryId) {
+        Optional<Word> word = wordRepository.findById(wordId);
+        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
 
         DictionaryWords dictionaryWords = new DictionaryWords(word.get(), dictionary.get());
         dictionaryWordsRepository.save(dictionaryWords);

@@ -26,5 +26,6 @@ public class DictionaryController {
     public DictionaryDto getDictionary(@PathVariable int id){
         return service.getDictionary(id);
     }
+
 }
 

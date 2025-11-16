@@ -6,6 +6,9 @@ import com.example.mapper.DictionaryMapper;
 import com.example.repository.DictionaryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
     private final DictionaryRepository repository;
@@ -36,4 +39,10 @@ public class DictionaryServiceImpl implements DictionaryService {
         Dictionary savedDictionary = repository.save(dictionary);
         return dictionaryMapper.toDto(savedDictionary);
     }
+
+    @Override
+    public List<DictionaryDto> getUserDictionaries(int userId) {
+        return repository.findUserDictionaries(userId);
+    }
+
 }

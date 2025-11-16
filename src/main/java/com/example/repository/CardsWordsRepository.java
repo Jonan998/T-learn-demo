@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import com.example.dto.WordDto;
 import com.example.model.CardsWords;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,11 +16,12 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
     Optional<CardsWords> getByIdCardWords(@Param("id") Integer id);
 
     @Query(value = """
-    SELECT w.id,
-           cw.study_lvl,
-           w.eng_lang,
-           w.rus_lang,
-           w.transcription
+    SELECT 
+        w.id AS id,
+        cw.study_lvl AS study_lvl,      -- вторым
+        w.eng_lang AS engLang,
+        w.rus_lang AS rusLang,
+        w.transcription AS transcription
     FROM cards_words cw
     JOIN words w ON w.id = cw.word_id
     WHERE cw.user_id = :userId
@@ -28,7 +30,8 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
     ORDER BY RANDOM()
     LIMIT :limit
 """, nativeQuery = true)
-    List<Object[]> getRepeatDeckWords(@Param("userId") Integer userId,
-                                      @Param("limit") int limit);
+    List<WordDto> getRepeatDeckWords(@Param("userId") int userId,
+                                     @Param("limit") int limit);
+
 
 }

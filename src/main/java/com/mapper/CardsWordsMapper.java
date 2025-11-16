@@ -2,6 +2,7 @@
 package com.example.mapper;
 
 import com.example.model.CardsWords;
+import com.example.model.User;
 import com.example.dto.CardsWordsDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -31,24 +31,24 @@ public class CardsWordsServiceImpl implements CardsWordsService {
     }
 
     @Override
-    public CardsWordsDto getCardsWords(int cards_wordsId) { 
-        CardsWords cardsWords = cardsWordsRepository.getByIdCardWords(cards_wordsId).orElse(null);
+    public CardsWordsDto getCardsWords(int cardsWordsId) {
+        CardsWords cardsWords = cardsWordsRepository.getByIdCardWords(cardsWordsId).orElse(null);
         return cardsWords != null ? cardsWordsMapper.toDto(cardsWords) : null;
     }
 
     @Override
     @Transactional
-    public void createCardsWords(int user_id,
-                                 int word_id,
-                                 int dictionary_id,
-                                 int study_lvl,
-                                 LocalDate next_review) {
+    public void createCardsWords(int userId,
+                                 int wordId,
+                                 int dictionaryId,
+                                 int studyLvl,
+                                 LocalDate nextReview) {
 
-        Optional<User> user = userRepository.findById(user_id);
-        Optional<Word> word = wordRepository.findById(word_id);
-        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionary_id);
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Word> word = wordRepository.findById(wordId);
+        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
 
-        CardsWords card = new CardsWords(user.get(), word.get(), dictionary.get(), study_lvl, next_review);
+        CardsWords card = new CardsWords(user.get(), word.get(), dictionary.get(), studyLvl, nextReview);
         cardsWordsRepository.save(card);
     }
     

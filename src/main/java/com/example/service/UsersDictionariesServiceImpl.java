@@ -31,18 +31,18 @@ public class UsersDictionariesServiceImpl implements UsersDictionariesService {
     }
 
     @Override
-    public UsersDictionariesDto getUsersDictionaries(int users_dictionariesId) {
-        UsersDictionaries usersDictionaries = repository.getByIdUsersDict(users_dictionariesId).orElse(null);
+    public UsersDictionariesDto getUsersDictionaries(int usersDictionariesId) {
+        UsersDictionaries usersDictionaries = repository.getByIdUsersDict(usersDictionariesId).orElse(null);
         return usersDictionaries != null ? usersDictionariesMapper.toDto(usersDictionaries) : null;
     }
 
     @Override
     @Transactional
-    public void createUsersDictionaries(int user_id, int dictionary_id, String is_active, int progress) {
-        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionary_id);
-        Optional<User> user = userRepository.findById(user_id);
+    public void createUsersDictionaries(int userId, int dictionaryId, String isActive, int progress) {
+        Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
+        Optional<User> user = userRepository.findById(userId);
 
-        repository.save(new UsersDictionaries(user.get(), dictionary.get(), is_active, progress));
+        repository.save(new UsersDictionaries(user.get(), dictionary.get(), isActive, progress));
     }
     
     @Transactional
