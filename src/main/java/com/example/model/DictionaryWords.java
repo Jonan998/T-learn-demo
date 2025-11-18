@@ -2,9 +2,15 @@ package com.example.model;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "dictionary_words")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DictionaryWords {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,20 +24,9 @@ public class DictionaryWords {
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
 
-    public DictionaryWords(){}
-
     public DictionaryWords(Word word,
                            Dictionary dictionary){
         this.dictionary = dictionary;
         this.word = word;
     }
-
-    public Integer getId(){return id;}
-    public void setId(Integer id) {this.id = id;}
-
-    public Word getWord() {return word;}
-    public void setWord(Word word) {this.word = word;}
-
-    public Dictionary getDictionary() {return dictionary;}
-    public void setDictionary(Dictionary dictionary) {this.dictionary = dictionary;}
 }

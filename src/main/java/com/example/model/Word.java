@@ -2,12 +2,18 @@ package com.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "words")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +25,13 @@ public class Word {
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Builder.Default
     private List<CardsWords> cardsWords = new ArrayList<>();
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Builder.Default
     private List<DictionaryWords> dictionaryWords = new ArrayList<>();
-
-    public Word() {}
 
     public Word(String engLang,
                 String rusLang,
@@ -35,22 +41,5 @@ public class Word {
         this.transcription = transcription;
     }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getEngLang() { return engLang; }
-    public void setEngLang(String engLang) { this.engLang = engLang; }
-
-    public String getRusLang() { return rusLang; }
-    public void setRusLang(String rusLang) { this.rusLang = rusLang; }
-
-    public String getTranscription() { return transcription; }
-    public void setTranscription(String transcription) { this.transcription = transcription; }
-
-    public List<CardsWords> getCardsWords() { return cardsWords; }
-    public void setCardsWords(List<CardsWords> cardsWords) { this.cardsWords = cardsWords; }
-
-    public List<DictionaryWords> getDictionaryWords() { return dictionaryWords; }
-    public void setDictionaryWords(List<DictionaryWords> dictionaryWords) { this.dictionaryWords = dictionaryWords; }
 }
 

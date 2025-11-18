@@ -1,8 +1,11 @@
 package com.example.service;
 
+import com.example.dto.UserDto;
 import com.example.model.User;
 
+import java.time.LocalDate;
+
 public interface UserService {
-    User getUser(int userId);
-    void createUser(String name, String password);
+    UserDto getUser(int userId);
+    void createUser(String name, String password, LocalDate createdAtNew, LocalDate createdAtRepeat, int limitNew, int limitRepeat);
 }
