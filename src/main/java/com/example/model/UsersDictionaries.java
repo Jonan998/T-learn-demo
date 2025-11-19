@@ -23,13 +23,16 @@ public class UsersDictionaries {
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
 
-    private String isActive;
-    private int progress;
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Column(name = "progress")
+    private Integer progress;
 
     public UsersDictionaries(User user,
                              Dictionary dictionary,
-                             String isActive,
-                             int progress) {
+                             Boolean isActive,
+                             Integer progress) {
         this.user = user;
         this.dictionary = dictionary;
         this.isActive = isActive;

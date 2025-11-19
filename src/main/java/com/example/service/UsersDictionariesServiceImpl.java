@@ -42,7 +42,8 @@ public class UsersDictionariesServiceImpl implements UsersDictionariesService {
         Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
         Optional<User> user = userRepository.findById(userId);
 
-        repository.save(new UsersDictionaries(user.get(), dictionary.get(), isActive, progress));
+        Boolean isActiveBoolean = Boolean.valueOf(isActive);
+        repository.save(new UsersDictionaries(user.get(), dictionary.get(), isActiveBoolean, progress));
     }
     
     @Transactional
@@ -54,7 +55,7 @@ public class UsersDictionariesServiceImpl implements UsersDictionariesService {
             UsersDictionaries usersDictionaries = new UsersDictionaries(
                 user.get(),
                 dictionary.get(),
-                usersDictionariesDto.getIsActive(),
+                usersDictionariesDto.getIsActive(), 
                 usersDictionariesDto.getProgress()
             );
             UsersDictionaries savedUsersDictionaries = repository.save(usersDictionaries);

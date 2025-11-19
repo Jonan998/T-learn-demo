@@ -20,4 +20,20 @@ public class DictionaryDto {
         this.name = name;
         this.language = language;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
 }

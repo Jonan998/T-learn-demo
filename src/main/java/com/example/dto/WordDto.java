@@ -14,10 +14,20 @@ public class WordDto {
     private String rusLang;
     private String transcription;
 
-    public WordDto(Integer id, String engLang, String rusLang, String transcription) {
-        this.id = id;
-        this.engLang = engLang;
-        this.rusLang = rusLang;
-        this.transcription = transcription;
+    public Integer getId() {
+        return id;
     }
+
+    public String getEngLang() {
+        return engLang;
+    }
+
+    public String getRusLang() {
+        return rusLang;
+    }
+
+    public String getTranscription() {
+        return transcription;
+    }
+
 }

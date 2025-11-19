@@ -9,8 +9,28 @@ import lombok.*;
 @Builder
 public class UsersDictionariesDto {
     private Integer id;
-    private Integer userId;          // вместо полного объекта User
-    private Integer dictionaryId;    // вместо полного объекта Dictionary
-    private String isActive;
+    private Integer userId;
+    private Integer dictionaryId;
+    private Boolean isActive;
     private Integer progress;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public Integer getDictionaryId() {
+        return dictionaryId;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
 }

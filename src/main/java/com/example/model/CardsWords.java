@@ -46,4 +46,52 @@ public class CardsWords {
         this.studyLevel = studyLevel;
         this.nextReview = nextReview;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+    public Integer getStudyLevel() {
+        return studyLevel;
+    }
+
+    public LocalDate getNextReview() {
+        return nextReview;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setWord(Word word) {
+        this.word = word;
+    }
+
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
+
+    public void setStudyLevel(Integer studyLevel) {
+        this.studyLevel = studyLevel;
+    }
+
+    public void setNextReview(LocalDate nextReview) {
+        this.nextReview = nextReview;
+    }
 }

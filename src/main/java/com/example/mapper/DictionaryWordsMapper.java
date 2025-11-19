@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DictionaryWordsMapper {
     
-    @Mapping(target = "wordId", source = "word.id")
-    @Mapping(target = "dictionaryId", source = "dictionary.id")
+    @Mapping(target = "wordId", expression = "java(entity.getWord() != null ? entity.getWord().getId() : null)")
+    @Mapping(target = "dictionaryId", expression = "java(entity.getDictionary() != null ? entity.getDictionary().getId() : null)")
     DictionaryWordsDto toDto(DictionaryWords entity);
     
     @Mapping(target = "word", ignore = true)

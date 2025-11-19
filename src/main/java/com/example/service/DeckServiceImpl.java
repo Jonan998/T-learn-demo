@@ -1,6 +1,5 @@
 package com.example.service;
 
-
 import com.example.dto.WordDto;
 import com.example.model.CardsWords;
 import com.example.model.Dictionary;
@@ -67,13 +66,7 @@ public class DeckServiceImpl implements DeckService {
                     .orElseThrow();
 
             cards.add(
-                    CardsWords.builder()
-                            .user(user)
-                            .word(word)
-                            .dictionary(dict)
-                            .studyLevel(1)
-                            .nextReview(LocalDate.now().minusWeeks(2))
-                            .build()
+                new CardsWords(user, word, dict, 1, LocalDate.now().minusWeeks(2))
             );
         }
 
@@ -82,7 +75,6 @@ public class DeckServiceImpl implements DeckService {
 
         return deck;
     }
-
 
     @Override
     public List<WordDto> getRepeatDeck(int userId) {
@@ -104,4 +96,3 @@ public class DeckServiceImpl implements DeckService {
         return deck;
     }
 }
-

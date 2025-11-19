@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import com.example.dto.CardsWordsDto;
-import com.example.model.CardsWords;
 import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;

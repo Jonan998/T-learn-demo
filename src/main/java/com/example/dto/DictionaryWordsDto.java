@@ -9,6 +9,18 @@ import lombok.*;
 @Builder
 public class DictionaryWordsDto {
     private Integer id;
-    private Integer wordId;          // вместо полного объекта Word
-    private Integer dictionaryId;    // вместо полного объекта Dictionary
+    private Integer wordId;          
+    private Integer dictionaryId;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getWordId() {
+        return wordId;
+    }
+
+    public Integer getDictionaryId() {
+        return dictionaryId;
+    }
 }
