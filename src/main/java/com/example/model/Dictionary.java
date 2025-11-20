@@ -42,8 +42,5 @@ public class Dictionary {
         this.name = name;
         this.description = description;
         this.language = language;
-        this.cardsWords = new ArrayList<>();
-        this.dictionaryWords = new ArrayList<>();
-        this.usersDictionaries = new ArrayList<>();
     }
 }
