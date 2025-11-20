@@ -61,40 +61,4 @@ public class User {
         this.limitNew = limitNew;
         this.limitRepeat = limitRepeat;
     }
-
-        public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public LocalDate getCreatedAtNew() {
-        return createdAtNew;
-    }
-
-    public LocalDate getCreatedAtRepeat() {
-        return createdAtRepeat;
-    }
-
-    public int getLimitNew() {
-        return limitNew;
-    }
-
-    public int getLimitRepeat() {
-        return limitRepeat;
-    }
-
-    public List<CardsWords> getCardsWords() {
-        return cardsWords;
-    }
-
-    public List<UsersDictionaries> getUsersDictionaries() {
-        return usersDictionaries;
-    }
 }

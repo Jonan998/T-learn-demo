@@ -29,36 +29,4 @@ public class Word {
         this.rusLang = rusLang;
         this.transcription = transcription;
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getEngLang() {
-        return engLang;
-    }
-
-    public String getRusLang() {
-        return rusLang;
-    }
-
-    public String getTranscription() {
-        return transcription;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setEngLang(String engLang) {
-        this.engLang = engLang;
-    }
-
-    public void setRusLang(String rusLang) {
-        this.rusLang = rusLang;
-    }
-
-    public void setTranscription(String transcription) {
-        this.transcription = transcription;
-    }
 }
