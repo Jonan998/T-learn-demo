@@ -1,9 +1,15 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "users_dictionaries")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UsersDictionaries {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,33 +23,19 @@ public class UsersDictionaries {
     @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
 
-    private String is_active;
-    private int progress;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
-    public UsersDictionaries() {}
+    @Column(name = "progress")
+    private Integer progress;
 
     public UsersDictionaries(User user,
                              Dictionary dictionary,
-                             String is_active,
-                             int progress){
+                             Boolean isActive,
+                             Integer progress) {
         this.user = user;
         this.dictionary = dictionary;
-        this.is_active = is_active;
+        this.isActive = isActive;
         this.progress = progress;
     }
-
-    public Integer getId() {return id;}
-    public void setId(Integer id) {this.id = id;}
-
-    public User getUser() {return user;}
-    public void setUser(User user) {this.user = user;}
-
-    public Dictionary getDictionary() {return dictionary;}
-    public void setDictionary(Dictionary dictionary) {this.dictionary = dictionary;}
-
-    public String getIs_active() {return is_active;}
-    public void setIs_active(String is_active) {this.is_active = is_active;}
-
-    public int getProgress() {return progress;}
-    public void setProgress(int progress) {this.progress = progress;}
 }

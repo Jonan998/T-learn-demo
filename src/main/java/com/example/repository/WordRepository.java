@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import com.example.dto.WordDto;
 import com.example.model.Word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,31 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     LIMIT :limit
     )
     ORDER BY RANDOM()""", nativeQuery = true)
-    List<Word> GetWords(@Param("limit") int count);
+    List<Word> getWords(@Param("limit") int count);
+
+    @Query(value = """
+    SELECT 
+        w.id AS id,
+        0 AS study_lvl,            -- здесь ставим вторым поле study_lvl
+        w.eng_lang AS engLang,
+        w.rus_lang AS rusLang,
+        w.transcription AS transcription
+    FROM words w
+    JOIN dictionary_words dw ON w.id = dw.word_id
+    WHERE w.id NOT IN (
+        SELECT word_id FROM cards_words WHERE user_id = :userId
+    )
+    ORDER BY RANDOM()
+    LIMIT :limit
+""", nativeQuery = true)
+    List<WordDto> getNewDeckWords(@Param("userId") int userId,
+                                  @Param("limit") int limit);
+    @Query(value = """
+    SELECT dw.dictionary_id
+    FROM dictionary_words dw
+    WHERE dw.word_id = :wordId
+    LIMIT 1
+""", nativeQuery = true)
+    Integer findDictionaryId(@Param("wordId") Integer wordId);
+
 }
