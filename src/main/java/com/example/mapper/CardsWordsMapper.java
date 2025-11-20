@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.example.model.CardsWords;
 import com.example.dto.CardsWordsDto;
 import org.mapstruct.Mapper;
+import com.example.model.Dictionary;
 
 @Mapper(componentModel = "spring")
 public interface CardsWordsMapper {
@@ -27,10 +28,10 @@ public interface CardsWordsMapper {
             return null;
         }
         
-        return CardsWords.builder()
-                .id(dto.getId())
-                .studyLevel(dto.getStudyLevel())
-                .nextReview(dto.getNextReview())
-                .build();
+        CardsWords cardsWords = new CardsWords();
+        cardsWords.setId(dto.getId());
+        cardsWords.setStudyLevel(dto.getStudyLevel());
+        cardsWords.setNextReview(dto.getNextReview());
+        return cardsWords;
     }
 }
