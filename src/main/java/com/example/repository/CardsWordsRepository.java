@@ -33,5 +33,5 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
     List<WordDto> getRepeatDeckWords(@Param("userId") int userId,
                                      @Param("limit") int limit);
 
-
+    Optional<CardsWords> findByUserIdAndWordId(int userId, int wordId);
 }
