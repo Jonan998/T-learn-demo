@@ -3,7 +3,7 @@ package com.example.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cards_words")
@@ -33,13 +33,13 @@ public class CardsWords {
     private Integer studyLevel;
 
     @Column(name = "next_review")
-    private LocalDate nextReview;
+    private LocalDateTime nextReview;
 
     public CardsWords(User user,
                       Word word,
                       Dictionary dictionary,
                       Integer studyLevel,
-                      LocalDate nextReview) {
+                      LocalDateTime nextReview) {
         this.user = user;
         this.word = word;
         this.dictionary = dictionary;

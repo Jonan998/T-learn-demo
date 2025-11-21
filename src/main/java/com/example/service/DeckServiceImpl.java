@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class DeckServiceImpl implements DeckService {
                     .orElseThrow();
 
             cards.add(
-                new CardsWords(user, word, dict, 1, LocalDate.now().minusWeeks(2))
+                new CardsWords(user, word, dict, 1, LocalDateTime.now().minusWeeks(2))
             );
         }
 

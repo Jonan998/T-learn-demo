@@ -13,21 +13,4 @@ public class WordDto {
     private String engLang;
     private String rusLang;
     private String transcription;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getEngLang() {
-        return engLang;
-    }
-
-    public String getRusLang() {
-        return rusLang;
-    }
-
-    public String getTranscription() {
-        return transcription;
-    }
-
 }

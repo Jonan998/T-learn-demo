@@ -7,7 +7,9 @@ import com.example.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,7 +44,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
                                  int wordId,
                                  int dictionaryId,
                                  int studyLvl,
-                                 LocalDate nextReview) {
+                                 LocalDateTime nextReview) {
 
         Optional<User> user = userRepository.findById(userId);
         Optional<Word> word = wordRepository.findById(wordId);
@@ -70,5 +72,29 @@ public class CardsWordsServiceImpl implements CardsWordsService {
             return cardsWordsMapper.toDto(savedCard);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void updateWordStatus(int userId, List<CardsWordsDto> updates){
+        for(CardsWordsDto dto : updates){
+            CardsWords card = cardsWordsRepository.findByUserIdAndWordId(userId,dto.getWordId()).orElseThrow();
+
+            int newLvl = dto.getStudyLevel();
+            card.setStudyLevel(newLvl);
+
+            LocalDateTime next;
+            switch (newLvl){
+                case 1 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMinutes(5);
+                case 2 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusHours(1);
+                case 3 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusDays(1);
+                case 4 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusWeeks(1);
+                case 5 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(1);
+                case 6 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
+                default -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+            }
+            card.setNextReview(next);
+            cardsWordsRepository.save(card);
+        }
     }
 }
