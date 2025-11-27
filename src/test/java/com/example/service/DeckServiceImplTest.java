@@ -10,6 +10,7 @@ import com.example.repository.CardsWordsRepository;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.WordRepository;
+import com.example.service.DeckServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
