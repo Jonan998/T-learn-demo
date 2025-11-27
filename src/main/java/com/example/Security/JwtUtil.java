@@ -53,4 +53,20 @@ public class JwtUtil {
             return true;
         }
     }
+
+    public Integer extractUserId(String token) {
+        try {
+            return getClaims(token).get("userId",Integer.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String extractUsername(String token) {
+        try {
+            return getClaims(token).getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

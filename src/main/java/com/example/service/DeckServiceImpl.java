@@ -9,11 +9,14 @@ import com.example.repository.CardsWordsRepository;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.WordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,9 @@ public class DeckServiceImpl implements DeckService {
     private final CardsWordsRepository cardsWordsRepository;
     private final DictionaryRepository dictionaryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private JdbcTemplate jdbc;
+
 
     public DeckServiceImpl(UserRepository userRepository,
                            WordRepository wordRepository,
@@ -66,7 +72,7 @@ public class DeckServiceImpl implements DeckService {
                     .orElseThrow();
 
             cards.add(
-                new CardsWords(user, word, dict, 1, LocalDateTime.now().minusWeeks(2))
+                new CardsWords(user, word, dict, 0, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
             );
         }
 
@@ -95,4 +101,6 @@ public class DeckServiceImpl implements DeckService {
 
         return deck;
     }
+
+
 }

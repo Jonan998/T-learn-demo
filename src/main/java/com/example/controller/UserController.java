@@ -1,15 +1,13 @@
 package com.example.controller;
 
 import com.example.dto.UserDto;
-import com.example.model.User;
 import com.example.service.UserService;
-import com.example.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     private final UserService service;
 
@@ -31,4 +29,18 @@ public class UserController {
     public UserDto getUser(@PathVariable int id){
         return service.getUser(id);
     }
+
+    @GetMapping(value = "/settings", produces = "application/json; charset=UTF-8")
+    public UserDto getUserLimits(@RequestParam("user_id") int userId){
+        return service.getUserLimits(userId);
+    }
+
+    @PatchMapping(value = "/settings", produces = "application/json; charset=UTF-8")
+    public void updateUserSettings(
+            @RequestParam("user_id") int userId,
+            @RequestBody UserDto dto
+    ) {
+        service.updateUserSettings(userId, dto);
+    }
+
 }

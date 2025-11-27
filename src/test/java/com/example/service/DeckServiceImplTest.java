@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.model.CardsWords;
 import com.example.model.Dictionary;
@@ -42,6 +43,9 @@ class DeckServiceImplTest {
 
     @InjectMocks
     private DeckServiceImpl deckService;
+
+    @InjectMocks
+    private DictionaryServiceImpl dictionaryService;
 
     @BeforeEach
     void setUp() {
@@ -88,7 +92,6 @@ class DeckServiceImplTest {
         verify(valueOperations, times(1)).set(eq("user:1:deck_new"), anyList(), any());
         verify(cardsWordsRepository, times(1)).saveAll(anyList());
     }
-
     @Test
     void testGetRepeatDeck_WithCache() {
         int userId = 1;
@@ -104,5 +107,23 @@ class DeckServiceImplTest {
         verify(userRepository, never()).findById(anyInt());
         verify(cardsWordsRepository, never()).getRepeatDeckWords(anyInt(), anyInt());
         verify(valueOperations, never()).set(anyString(), anyList(), any());
+    }
+
+    @Test
+    void testGetUserDictionaries(){
+
+        List<DictionaryDto> dict = List.of(
+                new DictionaryDto(5,"animals","en-ru"),
+                new DictionaryDto(6,"food","en-ru"),
+                new DictionaryDto(7,"colors","en-ru")
+        );
+
+        when(dictionaryRepository.findUserDictionaries(3)).thenReturn(dict);
+
+        List<DictionaryDto> result = dictionaryService.getUserDictionaries(3);
+
+        assertEquals(3, result.size());
+
+        verify(dictionaryRepository,times(1)).findUserDictionaries(3);
     }
 }

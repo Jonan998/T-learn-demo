@@ -1,10 +1,13 @@
 package com.example.controller;
 
 import com.example.dto.DictionaryDto;
+import com.example.dto.WordDto;
 import com.example.model.Dictionary;
 import com.example.service.DictionaryService;
 import com.example.service.DictionaryServiceImpl;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/dictionary")
@@ -25,6 +28,11 @@ public class DictionaryController {
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
     public DictionaryDto getDictionary(@PathVariable int id){
         return service.getDictionary(id);
+    }
+
+    @GetMapping(produces = "application/json; charset=UTF-8")
+    public List<WordDto> getWordsByDictionaryId(@RequestParam("dictionary_id") int dictionaryId){
+        return service.getWordsByDictionaryId(dictionaryId);
     }
 
 }
