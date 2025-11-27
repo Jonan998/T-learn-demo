@@ -3,8 +3,10 @@ package com.example.controller;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.model.Dictionary;
+import com.example.service.AuthService;
 import com.example.service.DictionaryService;
 import com.example.service.DictionaryServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/dictionary")
 public class DictionaryController {
     private final DictionaryService service;
+    private final AuthService authService;
 
-    public DictionaryController(DictionaryService service){
+    public DictionaryController(DictionaryService service,AuthService authService){
         this.service = service;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -31,8 +35,8 @@ public class DictionaryController {
     }
 
     @GetMapping(produces = "application/json; charset=UTF-8")
-    public List<WordDto> getWordsByDictionaryId(@RequestParam("dictionary_id") int dictionaryId){
-        return service.getWordsByDictionaryId(dictionaryId);
+    public List<WordDto> getWordsByDictionaryId(HttpServletRequest request){
+        return service.getWordsByDictionaryId(authService.getUserId(request));
     }
 
 }

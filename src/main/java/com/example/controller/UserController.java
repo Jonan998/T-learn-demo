@@ -1,7 +1,9 @@
 package com.example.controller;
 
 import com.example.dto.UserDto;
+import com.example.service.AuthService;
 import com.example.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -10,9 +12,11 @@ import java.time.LocalDate;
 @RequestMapping("/user")
 public class UserController {
     private final UserService service;
+    private final AuthService authService;
 
-    public UserController(UserService service){
+    public UserController(UserService service,AuthService authService){
         this.service = service;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -31,16 +35,16 @@ public class UserController {
     }
 
     @GetMapping(value = "/settings", produces = "application/json; charset=UTF-8")
-    public UserDto getUserLimits(@RequestParam("user_id") int userId){
-        return service.getUserLimits(userId);
+    public UserDto getUserLimits(HttpServletRequest request){
+        return service.getUserLimits(authService.getUserId(request));
     }
 
     @PatchMapping(value = "/settings", produces = "application/json; charset=UTF-8")
     public void updateUserSettings(
-            @RequestParam("user_id") int userId,
+            HttpServletRequest request,
             @RequestBody UserDto dto
     ) {
-        service.updateUserSettings(userId, dto);
+        service.updateUserSettings(authService.getUserId(request), dto);
     }
 
 }

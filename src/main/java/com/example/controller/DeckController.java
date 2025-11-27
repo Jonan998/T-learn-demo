@@ -28,30 +28,25 @@ public class DeckController {
         this.authService = authService;
     }
 
-//    @GetMapping(value ="/words/new", produces = "application/json; charset=UTF-8")
-//    public List<WordDto> getNewWords(@RequestParam("user_id") Integer userId) {
-//        return deckService.getNewDeck(userId);
-//    }
-
     @GetMapping(value ="/words/new", produces = "application/json; charset=UTF-8")
     public List<WordDto> getNewWords(HttpServletRequest request) {
         return deckService.getNewDeck(authService.getUserId(request));
     }
 
     @GetMapping(value = "/words/repeat", produces = "application/json; charset=UTF-8")
-    public List<WordDto> getRepeatWords(@RequestParam("user_id") Integer userId) {
-        return deckService.getRepeatDeck(userId);
+    public List<WordDto> getRepeatWords(HttpServletRequest request) {
+        return deckService.getRepeatDeck(authService.getUserId(request));
     }
 
     @GetMapping(value = "/dictionary", produces = "application/json; charset=UTF-8")
-    public List<DictionaryDto> getUserDictionaries(@RequestParam("user_id") int userId){
-        return dictionaryService.getUserDictionaries(userId);
+    public List<DictionaryDto> getUserDictionaries(HttpServletRequest request){
+        return dictionaryService.getUserDictionaries(authService.getUserId(request));
     }
 
     @PatchMapping(value = "/progress", produces = "application/json; charset=UTF-8")
-    public void updateWordStatus(@RequestParam("user_id") Integer userId,
+    public void updateWordStatus(HttpServletRequest request,
                                  @RequestBody List<CardsWordsDto> updates) {
-        cardsWordsService.updateWordStatus(userId, updates);
+        cardsWordsService.updateWordStatus(authService.getUserId(request), updates);
     }
 
 }
