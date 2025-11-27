@@ -29,7 +29,7 @@ class DictionaryControllerTest {
     private com.example.Security.JwtUtil jwtUtil;
 
     @MockBean
-    private com.example.Security.CustomUserDetailsService userDetailsService;
+    private com.example.service.UserDetailsServiceImpl userDetailsService;
 
     @Test
     void testGetWordsByDictionaryId() throws Exception {

@@ -1,40 +1,33 @@
 package com.example.controller;
 
+import com.example.dto.CardsWordsDto;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
-import com.example.repository.CardsWordsRepository;
-import com.example.repository.DictionaryRepository;
-import com.example.repository.UserRepository;
-import com.example.repository.WordRepository;
-import com.example.service.DictionaryServiceImpl;
-import com.example.service.DeckServiceImpl;
+import com.example.service.AuthService;
 import com.example.service.CardsWordsServiceImpl;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.service.DeckServiceImpl;
+import com.example.service.DictionaryServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(DeckController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest
+@AutoConfigureMockMvc
 class DeckControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper mapper;
 
     @MockBean
     private DeckServiceImpl deckService;
@@ -46,27 +39,13 @@ class DeckControllerTest {
     private CardsWordsServiceImpl cardsWordsService;
 
     @MockBean
-    private CardsWordsRepository cardsWordsRepository;
+    private AuthService authService;
 
     @MockBean
-    private com.example.Security.JwtUtil jwtUtil;
-
-    @MockBean
-    private UserRepository userRepository;
-
-    @MockBean
-    private WordRepository wordRepository;
-
-    @MockBean
-    private DictionaryRepository dictionaryRepository;
-
-    @MockBean
-    private com.example.Security.CustomUserDetailsService userDetailsService;
-
+    private HttpServletRequest request;
 
     @Test
     void testGetUserDictionaries() throws Exception {
-
         List<DictionaryDto> dictionaries = List.of(
                 new DictionaryDto(1, "Basic", "EN"),
                 new DictionaryDto(2, "Travel", "EN")
@@ -85,17 +64,16 @@ class DeckControllerTest {
 
     @Test
     void testGetNewDeck() throws Exception {
-
         List<WordDto> words = List.of(
                 new WordDto(1, 0, "dog", "собака", "trans:dog"),
                 new WordDto(2, 0, "cat", "кошка", "trans:cat"),
                 new WordDto(3, 0, "fish", "рыба", "trans:fish")
         );
 
+        when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(1);
         when(deckService.getNewDeck(1)).thenReturn(words);
 
-        mockMvc.perform(get("/learning/words/new")
-                        .param("user_id", "1"))
+        mockMvc.perform(get("/learning/words/new"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].studyLvl").value(0))
@@ -116,7 +94,6 @@ class DeckControllerTest {
 
     @Test
     void testGetRepeatDeck() throws Exception {
-
         List<WordDto> words = List.of(
                 new WordDto(1, 4, "dog", "собака", "trans:dog"),
                 new WordDto(2, 5, "cat", "кошка", "trans:cat"),
@@ -145,4 +122,3 @@ class DeckControllerTest {
                 .andExpect(jsonPath("$[2].transcription").value("trans:fish"));
     }
 }
-

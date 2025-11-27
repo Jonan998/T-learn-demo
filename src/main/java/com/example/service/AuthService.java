@@ -13,9 +13,9 @@ public class AuthService {
     }
 
     public Integer getUserId(HttpServletRequest request){
-        String header = request.getHeader("Autorization");
+        String header = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Baerer ")){
+        if (header == null || !header.startsWith("Bearer ")){
             throw new RuntimeException("Неверный токен");
         }
 
