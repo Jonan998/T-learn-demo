@@ -52,6 +52,7 @@ class DeckControllerTest {
         );
 
         when(dictionaryService.getUserDictionaries(1)).thenReturn(dictionaries);
+        when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(1);
 
         mockMvc.perform(get("/learning/dictionary")
                         .param("user_id", "1"))
@@ -101,6 +102,7 @@ class DeckControllerTest {
         );
 
         when(deckService.getRepeatDeck(4)).thenReturn(words);
+        when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(4);
 
         mockMvc.perform(get("/learning/words/repeat")
                         .param("user_id", "4"))
