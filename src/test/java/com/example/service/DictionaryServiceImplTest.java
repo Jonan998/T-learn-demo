@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.WordDto;
+import com.example.mapper.DictionaryMapper;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +24,7 @@ class DictionaryServiceImplTest {
     private DictionaryRepository dictionaryRepository;
 
     @InjectMocks
-    private DictionaryServiceImpl service;
+    private DictionaryServiceImpl dictionaryService;
 
     @BeforeEach
     void init() {
@@ -40,10 +41,13 @@ class DictionaryServiceImplTest {
 
         when(wordRepository.findWordsByDictionaryId(99)).thenReturn(words);
 
-        List<WordDto> result = service.getWordsByDictionaryId(99);
+        List<WordDto> result = dictionaryService.getWordsByDictionaryId(99);
 
         assertEquals(2, result.size());
         assertEquals("one", result.get(0).getEngLang());
         verify(wordRepository, times(1)).findWordsByDictionaryId(99);
     }
 }
+
+
+

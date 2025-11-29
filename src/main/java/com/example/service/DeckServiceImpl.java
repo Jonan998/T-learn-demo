@@ -28,20 +28,22 @@ public class DeckServiceImpl implements DeckService {
     private final CardsWordsRepository cardsWordsRepository;
     private final DictionaryRepository dictionaryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
-    @Autowired
-    private JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
 
     public DeckServiceImpl(UserRepository userRepository,
                            WordRepository wordRepository,
                            CardsWordsRepository cardsWordsRepository,
                            DictionaryRepository dictionaryRepository,
-                           RedisTemplate<String, Object> redisTemplate) {
+                           RedisTemplate<String, Object> redisTemplate,
+                           JdbcTemplate jdbc
+    ) {
         this.userRepository = userRepository;
         this.wordRepository = wordRepository;
         this.cardsWordsRepository = cardsWordsRepository;
         this.dictionaryRepository = dictionaryRepository;
         this.redisTemplate = redisTemplate;
+        this.jdbc = jdbc;
     }
 
     @Override

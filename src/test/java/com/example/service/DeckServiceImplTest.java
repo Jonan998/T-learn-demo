@@ -93,6 +93,7 @@ class DeckServiceImplTest {
         verify(valueOperations, times(1)).set(eq("user:1:deck_new"), anyList(), any());
         verify(cardsWordsRepository, times(1)).saveAll(anyList());
     }
+
     @Test
     void testGetRepeatDeck_WithCache() {
         int userId = 1;

@@ -3,10 +3,7 @@ package com.example.controller;
 import com.example.dto.CardsWordsDto;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
-import com.example.service.AuthService;
-import com.example.service.CardsWordsServiceImpl;
-import com.example.service.DeckServiceImpl;
-import com.example.service.DictionaryServiceImpl;
+import com.example.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +13,12 @@ import java.util.List;
 @RequestMapping("/learning")
 public class DeckController {
 
-    private final DeckServiceImpl deckService;
-    private final DictionaryServiceImpl dictionaryService;
-    private final CardsWordsServiceImpl cardsWordsService;
+    private final DeckService deckService;
+    private final DictionaryService dictionaryService;
+    private final CardsWordsService cardsWordsService;
     private final AuthService authService;
 
-    public DeckController(DeckServiceImpl deckService, DictionaryServiceImpl dictionaryService,CardsWordsServiceImpl cardsWordsService, AuthService authService) {
+    public DeckController(DeckService deckService, DictionaryService dictionaryService,CardsWordsService cardsWordsService, AuthService authService) {
         this.deckService = deckService;
         this.dictionaryService = dictionaryService;
         this.cardsWordsService = cardsWordsService;

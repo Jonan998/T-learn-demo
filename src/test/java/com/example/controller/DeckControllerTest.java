@@ -3,15 +3,13 @@ package com.example.controller;
 import com.example.dto.CardsWordsDto;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
-import com.example.service.AuthService;
-import com.example.service.CardsWordsServiceImpl;
-import com.example.service.DeckServiceImpl;
-import com.example.service.DictionaryServiceImpl;
+import com.example.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
@@ -24,19 +22,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(username = "test", roles = "USER")
 class DeckControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private DeckServiceImpl deckService;
+    private DeckService deckService;
 
     @MockBean
-    private DictionaryServiceImpl dictionaryService;
+    private DictionaryService dictionaryService;
 
     @MockBean
-    private CardsWordsServiceImpl cardsWordsService;
+    private CardsWordsService cardsWordsService;
 
     @MockBean
     private AuthService authService;
