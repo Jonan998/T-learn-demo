@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.CardsWordsDto;
 import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/cards_words")
@@ -19,7 +19,7 @@ public class CardsWordsController {
                                   @RequestParam int word_id,
                                   @RequestParam int dictionary_id,
                                   @RequestParam int study_lvl,
-                                  @RequestParam LocalDate next_review) {
+                                  @RequestParam LocalDateTime next_review) {
         service.createCardsWords(user_id, word_id, dictionary_id, study_lvl, next_review);
     }
 

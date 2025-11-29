@@ -1,20 +1,22 @@
 package com.example.controller;
 
 import com.example.dto.UserDto;
-import com.example.model.User;
+import com.example.service.AuthService;
 import com.example.service.UserService;
-import com.example.service.UserServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     private final UserService service;
+    private final AuthService authService;
 
-    public UserController(UserService service){
+    public UserController(UserService service,AuthService authService){
         this.service = service;
+        this.authService = authService;
     }
 
     @PostMapping
@@ -31,4 +33,18 @@ public class UserController {
     public UserDto getUser(@PathVariable int id){
         return service.getUser(id);
     }
+
+    @GetMapping(value = "/settings", produces = "application/json; charset=UTF-8")
+    public UserDto getUserLimits(HttpServletRequest request){
+        return service.getUserLimits(authService.getUserId(request));
+    }
+
+    @PatchMapping(value = "/settings", produces = "application/json; charset=UTF-8")
+    public void updateUserSettings(
+            HttpServletRequest request,
+            @RequestBody UserDto dto
+    ) {
+        service.updateUserSettings(authService.getUserId(request), dto);
+    }
+
 }
