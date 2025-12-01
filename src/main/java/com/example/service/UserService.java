@@ -11,4 +11,6 @@ public interface UserService {
     void createUser(String name, String password, LocalDate createdAtNew, LocalDate createdAtRepeat, int limitNew, int limitRepeat);
 
     UserDto getUserLimits(int userId);
+
+    void updateUserSettings(int userId, UserDto dto);
 }

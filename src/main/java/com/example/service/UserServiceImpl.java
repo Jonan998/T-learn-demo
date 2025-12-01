@@ -58,4 +58,23 @@ public class UserServiceImpl implements UserService {
 
         return dto;
     }
+
+    @Override
+    public void updateUserSettings(int userId, UserDto dto) {
+        User user = repository.findById(userId).orElse(null);
+
+        if (dto.getName() != null) {
+            user.setName(dto.getName());
+        }
+
+        if (dto.getLimitNew() != null) {
+            user.setLimitNew(dto.getLimitNew());
+        }
+
+        if (dto.getLimitRepeat() != null) {
+            user.setLimitRepeat(dto.getLimitRepeat());
+        }
+
+        repository.save(user);
+    }
 }
