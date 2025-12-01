@@ -15,12 +15,12 @@ public class CardsWordsController {
     }
 
     @PostMapping
-    public void createCardsWords(@RequestParam int user_id,
-                                  @RequestParam int word_id,
-                                  @RequestParam int dictionary_id,
-                                  @RequestParam int study_lvl,
-                                  @RequestParam LocalDateTime next_review) {
-        service.createCardsWords(user_id, word_id, dictionary_id, study_lvl, next_review);
+    public void createCardsWords(@RequestParam (name = "user_id") int userId,
+                                  @RequestParam (name = "word_id") int wordId,
+                                  @RequestParam (name = "dictionary_id") int dictionaryId,
+                                  @RequestParam (name = "study_lvl") int studyLvl,
+                                  @RequestParam (name = "next_review") LocalDateTime nextReview) {
+        service.createCardsWords(userId, wordId, dictionaryId, studyLvl, nextReview);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")

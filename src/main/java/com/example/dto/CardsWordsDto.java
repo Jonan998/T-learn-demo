@@ -16,7 +16,7 @@ public class CardsWordsDto {
     private Integer studyLevel;
     private LocalDateTime nextReview;
 
-    public CardsWordsDto(Integer wordId, Integer studyLevel){
+    public CardsWordsDto(Integer wordId, Integer studyLevel) {
         this.wordId = wordId;
         this.studyLevel = studyLevel;
     }

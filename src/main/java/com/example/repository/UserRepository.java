@@ -1,6 +1,6 @@
 package com.example.repository;
 
-import com.example.dto.UserDto;
+import com.example.dto.UserLimitsView;
 import com.example.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     FROM users
     WHERE id = :userId
     """, nativeQuery = true)
-    UserDto findUserLimits(@Param("userId") Integer userId);
 
+    UserLimitsView findUserLimits(@Param("userId") Integer userId);
 
 }

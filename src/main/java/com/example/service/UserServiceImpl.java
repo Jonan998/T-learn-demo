@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.model.User;
 import com.example.dto.UserDto;
+import com.example.dto.UserLimitsView;
 import com.example.mapper.UserMapper;
 import com.example.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,24 +18,26 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository repository,
                            PasswordEncoder passwordEncoder,
-                           UserMapper userMapper) { 
+                           UserMapper userMapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
     }
 
     @Override
-    public UserDto getUser(int userId) { 
+    public UserDto getUser(int userId) {
         User user = repository.findById(userId).orElse(null);
         return user != null ? userMapper.toDto(user) : null;
     }
 
     @Override
-    public void createUser(String name, String password, LocalDate createdAtNew, LocalDate createdAtRepeat, int limitNew, int limitRepeat) {
+    public void createUser(String name, String password,
+                           LocalDate createdAtNew, LocalDate createdAtRepeat,
+                           int limitNew, int limitRepeat) {
         String encodedPassword = passwordEncoder.encode(password);
-        repository.save(new User(name, encodedPassword,createdAtNew,createdAtRepeat,limitNew,limitRepeat));
+        repository.save(new User(name, encodedPassword, createdAtNew, createdAtRepeat, limitNew, limitRepeat));
     }
-    
+
     public UserDto createUser(UserDto userDto, String rawPassword) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         User user = new User(userDto.getName(), encodedPassword, userDto.getCreatedAtNew(),userDto.getCreatedAtRepeat(),userDto.getLimitNew(),userDto.getLimitRepeat());
@@ -43,28 +46,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserLimits(int userId){
-        return repository.findUserLimits(userId);
+    public UserDto getUserLimits(Integer userId) {
+        UserLimitsView limitsView = repository.findUserLimits(userId);
+
+        UserDto dto = new UserDto();
+
+        dto.setLimitNew(limitsView.getLimitNew());
+        dto.setLimitRepeat(limitsView.getLimitRepeat());
+
+        return dto;
     }
-
-    @Override
-    public void updateUserSettings(int userId, UserDto dto) {
-
-        User user = repository.findById(userId).orElse(null);
-
-        if (dto.getName() != null) {
-            user.setName(dto.getName());
-        }
-
-        if (dto.getLimitNew() != null) {
-            user.setLimitNew(dto.getLimitNew());
-        }
-
-        if (dto.getLimitRepeat() != null) {
-            user.setLimitRepeat(dto.getLimitRepeat());
-        }
-
-        repository.save(user);
-    }
-
 }

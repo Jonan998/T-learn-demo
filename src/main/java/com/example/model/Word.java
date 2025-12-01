@@ -48,6 +48,4 @@ public class Word {
         this.engLang = engLang;
         this.rusLang = rusLang;
     }
-
-
 }
