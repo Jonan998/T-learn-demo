@@ -40,15 +40,17 @@ public class UserServiceImpl implements UserService {
 
     public UserDto createUser(UserDto userDto, String rawPassword) {
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        User user = new User(userDto.getName(), encodedPassword, userDto.getCreatedAtNew(),userDto.getCreatedAtRepeat(),userDto.getLimitNew(),userDto.getLimitRepeat());
+        User user = new User(userDto.getName(), encodedPassword, userDto.getCreatedAtNew(), userDto.getCreatedAtRepeat(), userDto.getLimitNew(), userDto.getLimitRepeat());
         User savedUser = repository.save(user);
         return userMapper.toDto(savedUser);
     }
 
     @Override
-    public UserDto getUserLimits(Integer userId) {
+    public UserDto getUserLimits(int userId) {
+        // 1. Repository возвращает Проекцию (UserLimitsView)
         UserLimitsView limitsView = repository.findUserLimits(userId);
 
+        // 2. Сервис маппит Проекцию в DTO
         UserDto dto = new UserDto();
 
         dto.setLimitNew(limitsView.getLimitNew());

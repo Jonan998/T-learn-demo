@@ -5,7 +5,7 @@ import com.example.dto.LoginRequest;
 import com.example.exception.AuthenticationException;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-import com.example.Security.JwtUtil;
+import com.example.config.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

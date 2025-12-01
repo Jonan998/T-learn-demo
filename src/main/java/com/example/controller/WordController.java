@@ -6,6 +6,7 @@ import com.example.service.WordService;
 import com.example.service.WordServiceImpl;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/words")
@@ -23,12 +24,12 @@ public class WordController {
         service.createWord(eng, rus, transcription);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public WordDto getWord(@PathVariable int id) {
         return service.getWord(id);
     }
 
-    @GetMapping(value = "/random/{count}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/random/{count}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<WordDto> getRandWords(
             @PathVariable("count") int count) {
         return service.getRandWords(count);

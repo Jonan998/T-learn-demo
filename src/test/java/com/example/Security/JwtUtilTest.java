@@ -1,6 +1,6 @@
 package com.example.Security;
 
-import com.example.Security.JwtUtil;
+import com.example.config.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 

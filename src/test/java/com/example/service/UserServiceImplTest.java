@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.UserDto;
+import com.example.dto.UserLimitsView; // <-- 1. Импортируем интерфейс-Проекцию
 import com.example.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,14 +27,19 @@ public class UserServiceImplTest {
 
     @Test
     void testGetUserLimits(){
-        UserDto limits = new UserDto(10,10);
 
-        when(userRepository.findUserLimits(4)).thenReturn(limits);
+        UserLimitsView limitsViewMock = mock(UserLimitsView.class);
+
+        when(limitsViewMock.getLimitNew()).thenReturn(10);
+        when(limitsViewMock.getLimitRepeat()).thenReturn(10);
+
+        when(userRepository.findUserLimits(4)).thenReturn(limitsViewMock);
 
         UserDto result = userService.getUserLimits(4);
 
         assertEquals(10, result.getLimitNew());
         assertEquals(10, result.getLimitRepeat());
-        verify(userRepository,times(1)).findUserLimits(4);
+
+        verify(userRepository, times(1)).findUserLimits(4);
     }
 }

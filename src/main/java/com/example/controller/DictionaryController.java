@@ -8,6 +8,7 @@ import com.example.service.DictionaryService;
 import com.example.service.DictionaryServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class DictionaryController {
         return service.getDictionary(id);
     }
 
-    @GetMapping(produces = "application/json; charset=UTF-8")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<WordDto> getWordsByDictionaryId(HttpServletRequest request){
         return service.getWordsByDictionaryId(authService.getUserId(request));
     }

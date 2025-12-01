@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
     Optional<User> findByName(String name);
 
     @Query(value = """
@@ -21,5 +22,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     """, nativeQuery = true)
 
     UserLimitsView findUserLimits(@Param("userId") Integer userId);
-
 }

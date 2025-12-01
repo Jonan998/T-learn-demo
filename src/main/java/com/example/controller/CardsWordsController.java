@@ -4,6 +4,7 @@ import com.example.dto.CardsWordsDto;
 import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/cards_words")
@@ -23,7 +24,7 @@ public class CardsWordsController {
         service.createCardsWords(userId, wordId, dictionaryId, studyLvl, nextReview);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CardsWordsDto getCardsWords(@PathVariable int id) {
         return service.getCardsWords(id);
     }

@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dto.UserDto;
 import com.example.service.UserService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
 
@@ -29,7 +30,7 @@ public class UserController {
         service.createUser(name, password, createdAtNew, createdAtRepeat, limitNew, limitRepeat);
     }
 
-    @GetMapping(value = ID_PATH, produces = "application/json; charset=UTF-8")
+    @GetMapping(value = ID_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDto getUser(@PathVariable int id){
         return service.getUser(id);
     }

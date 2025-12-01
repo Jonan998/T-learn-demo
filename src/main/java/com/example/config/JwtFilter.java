@@ -1,6 +1,8 @@
-package com.example.Security;
+package com.example.config;
 
 import com.example.service.UserDetailsServiceImpl;
+// Импорт JwtUtil может измениться, если ты его тоже переместил
+import com.example.config.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +22,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    // Best Practice: Выносим "магические числа" в статические константы
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -32,12 +37,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 1. Используем константу BEARER_PREFIX
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
+        // 2. Используем длину константы вместо "7"
+        String token = authHeader.substring(BEARER_PREFIX.length());
 
         try {
             Claims claims = jwtUtil.getClaims(token);
