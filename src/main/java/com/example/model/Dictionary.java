@@ -43,4 +43,8 @@ public class Dictionary {
         this.description = description;
         this.language = language;
     }
+
+    public Dictionary(String name){
+        this.name = name;
+    }
 }
