@@ -18,12 +18,12 @@ class CardsWordsServiceImplTest {
     @Mock
     private CardsWordsRepository cardsWordsRepository;
 
-    @InjectMocks
-    private CardsWordsServiceImpl cardsWordsService;
+    private CardsWordsService cardsWordsService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
+        cardsWordsService = new CardsWordsServiceImpl(cardsWordsRepository,null,null,null,null);
     }
 
     @Test

@@ -17,12 +17,13 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
-    @InjectMocks
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
+
+        userService = new UserServiceImpl(userRepository,null,null);
     }
 
     @Test

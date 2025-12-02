@@ -23,12 +23,13 @@ class DictionaryServiceImplTest {
     @Mock
     private DictionaryRepository dictionaryRepository;
 
-    @InjectMocks
-    private DictionaryServiceImpl dictionaryService;
+    private DictionaryService dictionaryService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
+
+        dictionaryService = new DictionaryServiceImpl(dictionaryRepository,null, wordRepository);
     }
 
     @Test

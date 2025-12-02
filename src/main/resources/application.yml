@@ -20,3 +20,8 @@ spring:
       port: 6379
   session:
     store-type: none
+  app:
+    jwt:
+      secret: "supersecretkeysupersecretkey123456"
+      expiration-millis: 2592000000
+

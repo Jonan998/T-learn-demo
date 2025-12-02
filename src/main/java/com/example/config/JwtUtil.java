@@ -12,16 +12,18 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String secret = "supersecretkeysupersecretkey123456";
+    private final AppProperties properties;
 
-    private final long defaultExpirationMillis = 1000L * 60 * 60 * 24 * 30;
+    public JwtUtil(AppProperties properties) {
+        this.properties = properties;
+    }
 
     protected long expirationMillis() {
-        return defaultExpirationMillis;
+        return properties.getExpirationMillis();
     }
 
     protected SecretKey getKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(properties.getSecret().getBytes());
     }
 
     public String generateToken(String username, int userId) {
@@ -30,11 +32,11 @@ public class JwtUtil {
         Date exp = new Date(now.getTime() + expirationMillis());
 
         return Jwts.builder()
-                .setSubject(username)
+                .subject(username)
                 .claim("userId", userId)
-                .setIssuedAt(now)
-                .setExpiration(exp)
-                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .issuedAt(now)
+                .expiration(exp)
+                .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -57,14 +59,6 @@ public class JwtUtil {
     public Integer extractUserId(String token) {
         try {
             return getClaims(token).get("userId",Integer.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public String extractUsername(String token) {
-        try {
-            return getClaims(token).getSubject();
         } catch (Exception e) {
             return null;
         }

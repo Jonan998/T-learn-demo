@@ -14,8 +14,10 @@ import com.example.service.DeckServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 
@@ -37,22 +39,36 @@ class DeckServiceImplTest {
     private DictionaryRepository dictionaryRepository;
 
     @Mock
+    private JdbcTemplate jdbc;
+
+    @Mock
     private RedisTemplate<String, Object> redisTemplate;
 
     @Mock
     private ValueOperations<String, Object> valueOperations;
 
-    @InjectMocks
-    private DeckServiceImpl deckService;
+    private DeckService deckService;
 
-    @InjectMocks
-    private DictionaryServiceImpl dictionaryService;
+    private DictionaryService dictionaryService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+
+        this.deckService = new DeckServiceImpl(
+                userRepository,
+                wordRepository,
+                cardsWordsRepository,
+                dictionaryRepository,
+                redisTemplate,
+                jdbc
+        );
+
+        this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository,null,null);
     }
+
 
     @Test
     void testGetNewDeck_WithEmptyCache() {
