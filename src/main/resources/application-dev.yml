@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: postgres
+    password: Azazazru228
+    driver-class-name: org.postgresql.Driver
+  security:
+    basic:
+      enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  logging:
+    level:
+      root: DEBUG
+      com.example: DEBUG

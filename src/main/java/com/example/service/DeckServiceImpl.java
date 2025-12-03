@@ -9,6 +9,7 @@ import com.example.repository.CardsWordsRepository;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.WordRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class DeckServiceImpl implements DeckService {
 
@@ -49,24 +51,40 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public List<WordDto> getNewDeck(int userId) {
 
+        log.info("Запрос новой колоды для userId={}", userId);
+
         String key = "user:" + userId + ":deck_new";
 
         List<WordDto> cached = (List<WordDto>) redisTemplate.opsForValue().get(key);
         if (cached != null && !cached.isEmpty()) {
+            log.info("Колода найдена в Redis по ключу {}", key);
             return cached;
         }
 
-        User user = userRepository.findById(userId).orElseThrow();
+        log.info("Колода в Redis не найдена. Загружаем из БД.");
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.error("Пользователь {} не найден", userId);
+                    return new RuntimeException("Пользователь не найден");
+                });
+
         int limit = user.getLimitNew();
+        log.debug("Предел новых слов: {}", limit);
 
         List<WordDto> deck = wordRepository.getNewDeckWords(userId, limit);
+        log.info("Получено {} слов из БД", deck.size());
 
         List<CardsWords> cards = new ArrayList<>();
 
         for (WordDto dto : deck) {
+            log.debug("Обрабатываем слово id={}", dto.getId());
 
             Word word = wordRepository.findById(dto.getId())
-                    .orElseThrow();
+                    .orElseThrow(() -> {
+                        log.error("Слово {} не найдено", dto.getId());
+                        return new RuntimeException("Слово не найдено");
+                    });
 
             Integer dictionaryId = wordRepository.findDictionaryId(dto.getId());
 
@@ -79,27 +97,41 @@ public class DeckServiceImpl implements DeckService {
         }
 
         cardsWordsRepository.saveAll(cards);
+        log.info("Сохранено {} карточек в cards_words", cards.size());
+
         redisTemplate.opsForValue().set(key, deck, Duration.ofHours(12));
+        log.info("Колода сохранена в Redis на 12 часов");
 
         return deck;
     }
 
     @Override
     public List<WordDto> getRepeatDeck(int userId) {
+        log.info("Запрос колоды повторения для userId={}", userId);
 
         String key = "user:" + userId + ":deck_repeat";
 
         List<WordDto> cached = (List<WordDto>) redisTemplate.opsForValue().get(key);
         if (cached != null && !cached.isEmpty()) {
+            log.info("Колода повторения найдена в Redis по ключу {}", key);
             return cached;
         }
 
-        User user = userRepository.findById(userId).orElseThrow();
+        log.info("Колода повторения не найдена в Redis. Загружаем из БД.");
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.error("Пользователь {} не найден", userId);
+                    return new RuntimeException("Пользователь не найден");
+                });
+
         int limit = user.getLimitRepeat();
+        log.debug("Предел новых слов: {}", limit);
 
         List<WordDto> deck = cardsWordsRepository.getRepeatDeckWords(userId, limit);
 
         redisTemplate.opsForValue().set(key, deck, Duration.ofHours(12));
+        log.info("Колода повторения сохранена в Redis на 12 часов");
 
         return deck;
     }

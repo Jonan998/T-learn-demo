@@ -1,27 +1,20 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
-    username: postgres
-    password: Azazazru228
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-  security:
-    basic:
-      enabled: false
-  data:
-    redis:
-      host: localhost
-      port: 6379
-  session:
-    store-type: none
   app:
     jwt:
       secret: "supersecretkeysupersecretkey123456"
       expiration-millis: 2592000000
-
+  session:
+    store-type: none
+  logging:
+    level:
+      root: INFO
+      org.springframework: WARN
+      org.hibernate: ERROR
+      com.example: INFO
