@@ -15,3 +15,10 @@ spring:
     level:
       root: INFO
       com.example: INFO
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+  app:
+    jwt:
+      secret: "supersecretkeysupersecretkey123456"
+      expirationMillis: 2592000000
+
