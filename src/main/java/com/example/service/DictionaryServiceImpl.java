@@ -6,11 +6,13 @@ import com.example.dto.DictionaryDto;
 import com.example.mapper.DictionaryMapper;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
     private final DictionaryRepository repository;
@@ -46,12 +48,24 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public List<DictionaryDto> getUserDictionaries(int userId) {
-        return repository.findUserDictionaries(userId);
+        log.info("Получение словарей для userId={}", userId);
+
+        List<DictionaryDto> dictionaries = repository.findUserDictionaries(userId);
+
+        log.debug("Найдено {} словарей для userId={}", dictionaries.size(), userId);
+
+        return dictionaries;
     }
 
     @Override
     public List<WordDto> getWordsByDictionaryId(int dictionaryId){
-        return wordRepository.findWordsByDictionaryId(dictionaryId);
+        log.info("Получение слов по dictionaryId={}", dictionaryId);
+
+        List<WordDto> words = wordRepository.findWordsByDictionaryId(dictionaryId);
+
+        log.debug("Найдено {} слов в dictionaryId={}", words.size(), dictionaryId);
+
+        return words;
     }
 
 }

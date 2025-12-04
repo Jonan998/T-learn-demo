@@ -5,11 +5,13 @@ import com.example.dto.UserDto;
 import com.example.dto.UserLimitsView;
 import com.example.mapper.UserMapper;
 import com.example.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
@@ -47,10 +49,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserLimits(int userId) {
-        // 1. Repository возвращает Проекцию (UserLimitsView)
+        log.info("Запрос лимитов пользователя userId={}", userId);
+
         UserLimitsView limitsView = repository.findUserLimits(userId);
 
-        // 2. Сервис маппит Проекцию в DTO
+        if (limitsView == null) {
+            log.warn("Лимиты для userId={} не найдены", userId);
+            return null;
+        }
+
+        log.debug("Лимиты: new={}, repeat={} для userId={}",
+                limitsView.getLimitNew(),
+                limitsView.getLimitRepeat(),
+                userId
+        );
+
         UserDto dto = new UserDto();
 
         dto.setLimitNew(limitsView.getLimitNew());
@@ -61,20 +74,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserSettings(int userId, UserDto dto) {
+        log.info("Обновление настроек пользователя userId={}", userId);
+
         User user = repository.findById(userId).orElse(null);
 
+        if (user == null) {
+            log.error("Не удалось обновить настройки — пользователь {} не найден", userId);
+            return;
+        }
+
+        log.debug("Полученные параметры для обновления: name={}, limitNew={}, limitRepeat={}",
+                dto.getName(), dto.getLimitNew(), dto.getLimitRepeat());
+
         if (dto.getName() != null) {
+            log.debug("Обновление имени: {} -> {}", user.getName(), dto.getName());
             user.setName(dto.getName());
         }
 
         if (dto.getLimitNew() != null) {
+            log.debug("Обновление limitNew: {} -> {}", user.getLimitNew(), dto.getLimitNew());
             user.setLimitNew(dto.getLimitNew());
         }
 
         if (dto.getLimitRepeat() != null) {
+            log.debug("Обновление limitRepeat: {} -> {}", user.getLimitRepeat(), dto.getLimitRepeat());
             user.setLimitRepeat(dto.getLimitRepeat());
         }
 
         repository.save(user);
+
+        log.info("Настройки пользователя userId={} успешно обновлены", userId);
     }
 }
