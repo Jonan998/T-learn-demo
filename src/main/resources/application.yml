@@ -8,11 +8,3 @@ spring:
         format_sql: true
   session:
     store-type: none
-  logging:
-    level:
-      root: INFO
-      org.springframework: WARN
-      org.hibernate: ERROR
-      com.example: INFO
-    pattern:
-      console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} [%X{activeProfile}] - %msg%n"
