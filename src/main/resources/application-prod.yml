@@ -21,3 +21,5 @@ logging:
     org.springframework: WARN
     org.hibernate: ERROR
     com.example: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{} - %msg%n"
