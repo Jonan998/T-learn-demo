@@ -3,7 +3,8 @@ package com.example.controller;
 import com.example.dto.CardsWordsDto;
 import com.example.service.CardsWordsService;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/cards_words")
@@ -15,15 +16,15 @@ public class CardsWordsController {
     }
 
     @PostMapping
-    public void createCardsWords(@RequestParam int user_id,
-                                  @RequestParam int word_id,
-                                  @RequestParam int dictionary_id,
-                                  @RequestParam int study_lvl,
-                                  @RequestParam LocalDate next_review) {
-        service.createCardsWords(user_id, word_id, dictionary_id, study_lvl, next_review);
+    public void createCardsWords(@RequestParam (name = "user_id") int userId,
+                                  @RequestParam (name = "word_id") int wordId,
+                                  @RequestParam (name = "dictionary_id") int dictionaryId,
+                                  @RequestParam (name = "study_lvl") int studyLvl,
+                                  @RequestParam (name = "next_review") LocalDateTime nextReview) {
+        service.createCardsWords(userId, wordId, dictionaryId, studyLvl, nextReview);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CardsWordsDto getCardsWords(@PathVariable int id) {
         return service.getCardsWords(id);
     }

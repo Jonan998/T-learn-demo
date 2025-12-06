@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-local
+    ports:
+      - "6379:6379"
+    restart: always
+
+  app:
+    build: .
+    container_name: tlearndemo
+    depends_on:
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/testdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Azazazru228
+  grafana:
+    build: './config/grafana'
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
+
+networks:
+  monitoring:

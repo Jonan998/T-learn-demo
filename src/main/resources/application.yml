@@ -1,22 +1,22 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
-    username: postgres
-    password: Azazazru228
-    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-  security:
-    basic:
-      enabled: false
-  data:
-    redis:
-      host: localhost
-      port: 6379
   session:
     store-type: none
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

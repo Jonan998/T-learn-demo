@@ -4,6 +4,7 @@ import com.example.dto.DictionaryWordsDto;
 import com.example.model.DictionaryWords;
 import com.example.service.DictionaryWordsService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/dictionary_words")
@@ -20,7 +21,7 @@ public class DictionaryWordsController {
         service.createDictionaryWords(word_id, dictionary_id);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DictionaryWordsDto getDictionary_words(@PathVariable int id) {
             return service.getDictionaryWords(id);
     }
