@@ -51,6 +51,8 @@ class DeckServiceImplTest {
 
     private DictionaryService dictionaryService;
 
+    private OllamaService ollamaService;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -63,7 +65,8 @@ class DeckServiceImplTest {
                 cardsWordsRepository,
                 dictionaryRepository,
                 redisTemplate,
-                jdbc
+                jdbc,
+                ollamaService
         );
 
         this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository,null,null);

@@ -31,6 +31,7 @@ public class DeckServiceImpl implements DeckService {
     private final DictionaryRepository dictionaryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final JdbcTemplate jdbc;
+    private final OllamaService ollamaService;
 
 
     public DeckServiceImpl(UserRepository userRepository,
@@ -38,7 +39,8 @@ public class DeckServiceImpl implements DeckService {
                            CardsWordsRepository cardsWordsRepository,
                            DictionaryRepository dictionaryRepository,
                            RedisTemplate<String, Object> redisTemplate,
-                           JdbcTemplate jdbc
+                           JdbcTemplate jdbc,
+                           OllamaService ollamaService
     ) {
         this.userRepository = userRepository;
         this.wordRepository = wordRepository;
@@ -46,6 +48,7 @@ public class DeckServiceImpl implements DeckService {
         this.dictionaryRepository = dictionaryRepository;
         this.redisTemplate = redisTemplate;
         this.jdbc = jdbc;
+        this.ollamaService = ollamaService;
     }
 
     @Override
@@ -130,11 +133,27 @@ public class DeckServiceImpl implements DeckService {
 
         List<WordDto> deck = cardsWordsRepository.getRepeatDeckWords(userId, limit);
 
+        try {
+            List<String> words = deck.stream()
+                    .map(WordDto::getEngLang)
+                    .toList();
+
+            List<String> examples = ollamaService.generateExampleSentencesBatch(words);
+
+            for (int i = 0; i < deck.size() && i < examples.size(); i++) {
+                deck.get(i).setExample(examples.get(i));
+            }
+
+            log.info("ИИ примеры успешно сгенерированы");
+
+        } catch (Exception e) {
+            log.warn("Ошибка генерации примеров через Ollama", e);
+        }
+
+
         redisTemplate.opsForValue().set(key, deck, Duration.ofHours(12));
         log.info("Колода повторения сохранена в Redis на 12 часов");
 
         return deck;
     }
-
-
 }
