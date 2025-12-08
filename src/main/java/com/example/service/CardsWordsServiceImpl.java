@@ -4,12 +4,16 @@ import com.example.model.*;
 import com.example.dto.CardsWordsDto;
 import com.example.mapper.CardsWordsMapper;
 import com.example.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CardsWordsServiceImpl implements CardsWordsService {
     private final CardsWordsRepository cardsWordsRepository;
@@ -42,7 +46,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
                                  int wordId,
                                  int dictionaryId,
                                  int studyLvl,
-                                 LocalDate nextReview) {
+                                 LocalDateTime nextReview) {
 
         Optional<User> user = userRepository.findById(userId);
         Optional<Word> word = wordRepository.findById(wordId);
@@ -70,5 +74,49 @@ public class CardsWordsServiceImpl implements CardsWordsService {
             return cardsWordsMapper.toDto(savedCard);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void updateWordStatus(int userId, List<CardsWordsDto> updates){
+
+        log.info("Обновление статуса слов: userId={}, количество обновлений={}",
+                userId, updates.size());
+
+        for(CardsWordsDto dto : updates){
+            log.debug("Обработка слова wordId={} для userId={}", dto.getWordId(), userId);
+
+            CardsWords card = cardsWordsRepository.findByUserIdAndWordId(userId,dto.getWordId())
+                    .orElseThrow(() -> {
+                        log.error("Карточка не найдена: userId={}, wordId={}", userId, dto.getWordId());
+                        return new RuntimeException("Карточка не найдена");
+                    });
+
+            int oldLvl = card.getStudyLevel();
+            int newLvl = dto.getStudyLevel();
+
+            log.debug("Старый уровень={}, новый уровень={} для wordId={}", oldLvl, newLvl, dto.getWordId());
+
+            card.setStudyLevel(newLvl);
+
+
+            LocalDateTime next;
+            switch (newLvl){
+                case 1 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMinutes(5);
+                case 2 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusHours(1);
+                case 3 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusDays(1);
+                case 4 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusWeeks(1);
+                case 5 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(1);
+                case 6 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
+                default -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+            }
+
+            card.setNextReview(next);
+
+            log.debug("Следующее повторение для wordId={} назначено на {}", dto.getWordId(), next);
+
+            cardsWordsRepository.save(card);
+        }
+        log.info("Обновление статусов слов завершено: userId={}, обновлено={}", userId, updates.size());
     }
 }

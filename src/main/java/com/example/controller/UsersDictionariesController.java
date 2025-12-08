@@ -5,6 +5,7 @@ import com.example.model.UsersDictionaries;
 import com.example.service.UsersDictionariesService;
 import com.example.service.UsersDictionariesServiceImpl;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/users_dictionaries")
@@ -23,7 +24,7 @@ public class UsersDictionariesController {
         service.createUsersDictionaries(user_id, dictionary_id, is_active, progress);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UsersDictionariesDto getUsers_dictionaries(@PathVariable int id){
         return service.getUsersDictionaries(id);
     }

@@ -46,4 +46,18 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 """, nativeQuery = true)
     Integer findDictionaryId(@Param("wordId") Integer wordId);
 
+    @Query(value = """
+       SELECT 
+          w.id,
+          w.eng_lang,
+          w.rus_lang,
+          w.transcription
+       FROM words w
+       JOIN dictionary_words dw ON dw.word_id = w.id
+       WHERE dw.dictionary_id = :dictionaryId
+        """, nativeQuery = true)
+        List<WordDto> findWordsByDictionaryId(@Param("dictionaryId") Integer dictionaryId);
+
+
+
 }
