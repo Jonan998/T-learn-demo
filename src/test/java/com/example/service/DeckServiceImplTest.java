@@ -2,7 +2,6 @@ package com.example.service;
 
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
-import com.example.model.CardsWords;
 import com.example.model.Dictionary;
 import com.example.model.User;
 import com.example.model.Word;
@@ -10,11 +9,11 @@ import com.example.repository.CardsWordsRepository;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.WordRepository;
-import com.example.service.DeckServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.dto.CardsWordsDto;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.service.*;

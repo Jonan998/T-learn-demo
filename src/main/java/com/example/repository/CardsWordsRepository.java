@@ -16,6 +16,20 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
     @Query("SELECT cw FROM CardsWords cw JOIN FETCH cw.user JOIN FETCH cw.word JOIN FETCH cw.dictionary WHERE cw.id = :id")
     Optional<CardsWords> getByIdCardWords(@Param("id") Integer id);
 
+    /**
+     * Возвращает список слов для повтора (колоду повторения) для указанного пользователя.
+     *
+     * Метод делает следующее:
+     * 1. Рассчитывает приоритет каждого слова с помощью модифицированного алгоритма забывания
+     *    (экспоненциальная кривая + интервалы для каждого уровня изучения).
+     * 2. Отбирает только те слова, у которых время следующего повторения уже наступило (next_review <= NOW()).
+     * 3. Сортирует слова по приоритету в порядке убывания.
+     * 4. Ограничивает результат указанным лимитом.
+     *
+     * @param userId идентификатор пользователя
+     * @param limit максимальное количество возвращаемых слов
+     * @return список DTO слов, отсортированных по приоритету
+     */
     @Query(value = """
         SELECT 
             w.id AS id,

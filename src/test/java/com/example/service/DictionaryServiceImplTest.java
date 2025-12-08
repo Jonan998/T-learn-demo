@@ -1,12 +1,10 @@
 package com.example.service;
 
 import com.example.dto.WordDto;
-import com.example.mapper.DictionaryMapper;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
