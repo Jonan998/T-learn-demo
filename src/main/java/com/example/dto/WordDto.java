@@ -21,6 +21,7 @@ public class WordDto {
     @JsonIgnore
     private Double priority;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String example;
 
     public WordDto(Integer id, String engLang, String rusLang, String transcription) {
