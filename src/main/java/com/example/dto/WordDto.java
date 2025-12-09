@@ -10,42 +10,47 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class WordDto {
-    private Integer id;
+  private Integer id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer studyLvl;
-    private String engLang;
-    private String rusLang;
-    private String transcription;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Integer studyLvl;
 
-    @JsonIgnore
-    private Double priority;
+  private String engLang;
+  private String rusLang;
+  private String transcription;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String example;
+  @JsonIgnore private Double priority;
 
-    public WordDto(Integer id, String engLang, String rusLang, String transcription) {
-        this.id = id;
-        this.engLang = engLang;
-        this.rusLang = rusLang;
-        this.transcription = transcription;
-    }
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String example;
 
-    public WordDto(Integer id, int studyLvl, String engLang, String rusLang, String transcription) {
-        this.id = id;
-        this.studyLvl = studyLvl;
-        this.engLang = engLang;
-        this.rusLang = rusLang;
-        this.transcription = transcription;
-    }
+  public WordDto(Integer id, String engLang, String rusLang, String transcription) {
+    this.id = id;
+    this.engLang = engLang;
+    this.rusLang = rusLang;
+    this.transcription = transcription;
+  }
 
-    public WordDto(Integer id, int studyLvl, String engLang, String rusLang, String transcription, Double priority) {
-        this.id = id;
-        this.studyLvl = studyLvl;
-        this.engLang = engLang;
-        this.rusLang = rusLang;
-        this.transcription = transcription;
-        this.priority = priority;
-    }
+  public WordDto(Integer id, int studyLvl, String engLang, String rusLang, String transcription) {
+    this.id = id;
+    this.studyLvl = studyLvl;
+    this.engLang = engLang;
+    this.rusLang = rusLang;
+    this.transcription = transcription;
+  }
 
+  public WordDto(
+      Integer id,
+      int studyLvl,
+      String engLang,
+      String rusLang,
+      String transcription,
+      Double priority) {
+    this.id = id;
+    this.studyLvl = studyLvl;
+    this.engLang = engLang;
+    this.rusLang = rusLang;
+    this.transcription = transcription;
+    this.priority = priority;
+  }
 }

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "spring.app.jwt")
 public class AppProperties {
-    private String secret;
-    private long expirationMillis;
+  private String secret;
+  private long expirationMillis;
 }

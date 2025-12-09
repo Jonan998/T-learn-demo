@@ -1,45 +1,44 @@
 package com.example.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 import com.example.dto.UserDto;
-import com.example.dto.UserLimitsView; // <-- 1. Импортируем интерфейс-Проекцию
+import com.example.dto.UserLimitsView;
 import com.example.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 public class UserServiceImplTest {
 
-    @Mock
-    private UserRepository userRepository;
+  @Mock private UserRepository userRepository;
 
-    private UserService userService;
+  private UserService userService;
 
-    @BeforeEach
-    void init() {
-        MockitoAnnotations.openMocks(this);
+  @BeforeEach
+  void init() {
+    MockitoAnnotations.openMocks(this);
 
-        userService = new UserServiceImpl(userRepository,null,null);
-    }
+    userService = new UserServiceImpl(userRepository, null, null);
+  }
 
-    @Test
-    void testGetUserLimits(){
+  @Test
+  void testGetUserLimits() {
 
-        UserLimitsView limitsViewMock = mock(UserLimitsView.class);
+    UserLimitsView limitsViewMock = mock(UserLimitsView.class);
 
-        when(limitsViewMock.getLimitNew()).thenReturn(10);
-        when(limitsViewMock.getLimitRepeat()).thenReturn(10);
+    when(limitsViewMock.getLimitNew()).thenReturn(10);
+    when(limitsViewMock.getLimitRepeat()).thenReturn(10);
 
-        when(userRepository.findUserLimits(4)).thenReturn(limitsViewMock);
+    when(userRepository.findUserLimits(4)).thenReturn(limitsViewMock);
 
-        UserDto result = userService.getUserLimits(4);
+    UserDto result = userService.getUserLimits(4);
 
-        assertEquals(10, result.getLimitNew());
-        assertEquals(10, result.getLimitRepeat());
+    assertEquals(10, result.getLimitNew());
+    assertEquals(10, result.getLimitRepeat());
 
-        verify(userRepository, times(1)).findUserLimits(4);
-    }
+    verify(userRepository, times(1)).findUserLimits(4);
+  }
 }

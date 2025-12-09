@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class DictionaryWordsDto {
-    private Integer id;
-    private Integer wordId;          
-    private Integer dictionaryId;
+  private Integer id;
+  private Integer wordId;
+  private Integer dictionaryId;
 }

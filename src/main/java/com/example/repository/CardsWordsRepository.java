@@ -2,36 +2,37 @@ package com.example.repository;
 
 import com.example.dto.WordDto;
 import com.example.model.CardsWords;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
-public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> {
+public interface CardsWordsRepository extends JpaRepository<CardsWords, Integer> {
 
-    @Query("SELECT cw FROM CardsWords cw JOIN FETCH cw.user JOIN FETCH cw.word JOIN FETCH cw.dictionary WHERE cw.id = :id")
-    Optional<CardsWords> getByIdCardWords(@Param("id") Integer id);
+  @Query(
+      "SELECT cw FROM CardsWords cw JOIN FETCH cw.user JOIN FETCH cw.word JOIN FETCH cw.dictionary WHERE cw.id = :id")
+  Optional<CardsWords> getByIdCardWords(@Param("id") Integer id);
 
-    /**
-     * Возвращает список слов для повтора (колоду повторения) для указанного пользователя.
-     *
-     * Метод делает следующее:
-     * 1. Рассчитывает приоритет каждого слова с помощью модифицированного алгоритма забывания
-     *    (экспоненциальная кривая + интервалы для каждого уровня изучения).
-     * 2. Отбирает только те слова, у которых время следующего повторения уже наступило (next_review <= NOW()).
-     * 3. Сортирует слова по приоритету в порядке убывания.
-     * 4. Ограничивает результат указанным лимитом.
-     *
-     * @param userId идентификатор пользователя
-     * @param limit максимальное количество возвращаемых слов
-     * @return список DTO слов, отсортированных по приоритету
-     */
-    @Query(value = """
-        SELECT 
+  /**
+   * Возвращает список слов для повтора (колоду повторения) для указанного пользователя.
+   *
+   * <p>Метод делает следующее: 1. Рассчитывает приоритет каждого слова с помощью модифицированного
+   * алгоритма забывания (экспоненциальная кривая + интервалы для каждого уровня изучения). 2.
+   * Отбирает только те слова, у которых время следующего повторения уже наступило (next_review <=
+   * NOW()). 3. Сортирует слова по приоритету в порядке убывания. 4. Ограничивает результат
+   * указанным лимитом.
+   *
+   * @param userId идентификатор пользователя
+   * @param limit максимальное количество возвращаемых слов
+   * @return список DTO слов, отсортированных по приоритету
+   */
+  @Query(
+      value =
+          """
+        SELECT
             w.id AS id,
             cw.study_lvl AS studyLvl,
             w.eng_lang AS engLang,
@@ -39,7 +40,7 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
             w.transcription AS transcription,
             (1 - EXP(
                 -LN(2) * (EXTRACT(EPOCH FROM (NOW() - cw.next_review)) / 86400.0) /
-                CASE 
+                CASE
                     WHEN cw.study_lvl = 1 THEN 1
                     WHEN cw.study_lvl = 2 THEN 2
                     WHEN cw.study_lvl = 3 THEN 4
@@ -55,10 +56,9 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords,Integer> 
           AND cw.next_review <= NOW()
         ORDER BY priority DESC
         LIMIT :limit
-        """, nativeQuery = true)
-    List<WordDto> getRepeatDeckWords(
-            @Param("userId") Integer userId,
-            @Param("limit") int limit);
+        """,
+      nativeQuery = true)
+  List<WordDto> getRepeatDeckWords(@Param("userId") Integer userId, @Param("limit") int limit);
 
-    Optional<CardsWords> findByUserIdAndWordId(int userId, int wordId);
+  Optional<CardsWords> findByUserIdAndWordId(int userId, int wordId);
 }

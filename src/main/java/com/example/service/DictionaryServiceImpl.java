@@ -1,71 +1,69 @@
 package com.example.service;
 
-import com.example.dto.WordDto;
-import com.example.model.Dictionary;
 import com.example.dto.DictionaryDto;
+import com.example.dto.WordDto;
 import com.example.mapper.DictionaryMapper;
+import com.example.model.Dictionary;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
-    private final DictionaryRepository repository;
-    private final DictionaryMapper dictionaryMapper;
-    private final WordRepository wordRepository;
+  private final DictionaryRepository repository;
+  private final DictionaryMapper dictionaryMapper;
+  private final WordRepository wordRepository;
 
-    public DictionaryServiceImpl(DictionaryRepository repository, DictionaryMapper dictionaryMapper, WordRepository wordRepository) {
-        this.repository = repository;
-        this.dictionaryMapper = dictionaryMapper;
-        this.wordRepository = wordRepository;
-    }
+  public DictionaryServiceImpl(
+      DictionaryRepository repository,
+      DictionaryMapper dictionaryMapper,
+      WordRepository wordRepository) {
+    this.repository = repository;
+    this.dictionaryMapper = dictionaryMapper;
+    this.wordRepository = wordRepository;
+  }
 
-    @Override
-    public DictionaryDto getDictionary(int dictionaryId) {
-        Dictionary dictionary = repository.findById(dictionaryId).orElse(null);
-        return dictionary != null ? dictionaryMapper.toDto(dictionary) : null;
-    }
+  @Override
+  public DictionaryDto getDictionary(int dictionaryId) {
+    Dictionary dictionary = repository.findById(dictionaryId).orElse(null);
+    return dictionary != null ? dictionaryMapper.toDto(dictionary) : null;
+  }
 
-    @Override
-    public void createDictionary(String name, String description, String language) {
-        repository.save(new Dictionary(name, description, language));
-    }
-    
-    public DictionaryDto createDictionary(DictionaryDto dictionaryDto) {
-        Dictionary dictionary = new Dictionary(
-            dictionaryDto.getName(), 
-            dictionaryDto.getDescription(), 
-            dictionaryDto.getLanguage()
-        );
-        Dictionary savedDictionary = repository.save(dictionary);
-        return dictionaryMapper.toDto(savedDictionary);
-    }
+  @Override
+  public void createDictionary(String name, String description, String language) {
+    repository.save(new Dictionary(name, description, language));
+  }
 
-    @Override
-    public List<DictionaryDto> getUserDictionaries(int userId) {
-        log.info("Получение словарей для userId={}", userId);
+  public DictionaryDto createDictionary(DictionaryDto dictionaryDto) {
+    Dictionary dictionary =
+        new Dictionary(
+            dictionaryDto.getName(), dictionaryDto.getDescription(), dictionaryDto.getLanguage());
+    Dictionary savedDictionary = repository.save(dictionary);
+    return dictionaryMapper.toDto(savedDictionary);
+  }
 
-        List<DictionaryDto> dictionaries = repository.findUserDictionaries(userId);
+  @Override
+  public List<DictionaryDto> getUserDictionaries(int userId) {
+    log.info("Получение словарей для userId={}", userId);
 
-        log.debug("Найдено {} словарей для userId={}", dictionaries.size(), userId);
+    List<DictionaryDto> dictionaries = repository.findUserDictionaries(userId);
 
-        return dictionaries;
-    }
+    log.debug("Найдено {} словарей для userId={}", dictionaries.size(), userId);
 
-    @Override
-    public List<WordDto> getWordsByDictionaryId(int dictionaryId){
-        log.info("Получение слов по dictionaryId={}", dictionaryId);
+    return dictionaries;
+  }
 
-        List<WordDto> words = wordRepository.findWordsByDictionaryId(dictionaryId);
+  @Override
+  public List<WordDto> getWordsByDictionaryId(int dictionaryId) {
+    log.info("Получение слов по dictionaryId={}", dictionaryId);
 
-        log.debug("Найдено {} слов в dictionaryId={}", words.size(), dictionaryId);
+    List<WordDto> words = wordRepository.findWordsByDictionaryId(dictionaryId);
 
-        return words;
-    }
+    log.debug("Найдено {} слов в dictionaryId={}", words.size(), dictionaryId);
 
+    return words;
+  }
 }
