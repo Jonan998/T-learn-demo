@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import com.example.dto.UserDto;
-import com.example.dto.UserLimitsView; // <-- 1. Импортируем интерфейс-Проекцию
+import com.example.dto.UserLimitsView;
 import com.example.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
