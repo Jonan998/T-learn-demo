@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionAdvice {
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
 }

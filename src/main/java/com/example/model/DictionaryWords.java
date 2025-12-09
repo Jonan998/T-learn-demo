@@ -1,6 +1,5 @@
 package com.example.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,21 +11,20 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class DictionaryWords {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "word_id")
-    private Word word;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "word_id")
+  private Word word;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dictionary_id")
-    private Dictionary dictionary;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "dictionary_id")
+  private Dictionary dictionary;
 
-    public DictionaryWords(Word word,
-                           Dictionary dictionary){
-        this.dictionary = dictionary;
-        this.word = word;
-    }
+  public DictionaryWords(Word word, Dictionary dictionary) {
+    this.dictionary = dictionary;
+    this.word = word;
+  }
 }

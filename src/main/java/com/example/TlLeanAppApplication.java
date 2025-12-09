@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TlLeanAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TlLeanAppApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(TlLeanAppApplication.class, args);
+  }
 }

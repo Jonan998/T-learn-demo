@@ -11,31 +11,28 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UsersDictionaries {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dictionary_id")
-    private Dictionary dictionary;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "dictionary_id")
+  private Dictionary dictionary;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+  @Column(name = "is_active")
+  private Boolean isActive;
 
-    @Column(name = "progress")
-    private Integer progress;
+  @Column(name = "progress")
+  private Integer progress;
 
-    public UsersDictionaries(User user,
-                             Dictionary dictionary,
-                             Boolean isActive,
-                             Integer progress) {
-        this.user = user;
-        this.dictionary = dictionary;
-        this.isActive = isActive;
-        this.progress = progress;
-    }
+  public UsersDictionaries(User user, Dictionary dictionary, Boolean isActive, Integer progress) {
+    this.user = user;
+    this.dictionary = dictionary;
+    this.isActive = isActive;
+    this.progress = progress;
+  }
 }
