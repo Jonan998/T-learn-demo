@@ -34,7 +34,7 @@
         <jjwt.version>0.12.5</jjwt.version>
         <spotless.version>2.43.0</spotless.version>
         <checkstyle.version>3.3.1</checkstyle.version>
-        <pmd.version>3.21.2</pmd.version>
+        <spotbugs.version>4.8.3.0</spotbugs.version>
     </properties>
     <dependencies>
         <dependency>
@@ -197,20 +197,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${pmd.version}</version>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.8.3.0</version>
                 <configuration>
-                    <failOnViolation>true</failOnViolation>
+                    <effort>Max</effort>
+                    <threshold>High</threshold>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
