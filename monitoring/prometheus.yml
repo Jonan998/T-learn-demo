@@ -7,3 +7,4 @@ scrape_configs:
     static_configs:
       - targets:
               - "tlearndemo:8080"
+
