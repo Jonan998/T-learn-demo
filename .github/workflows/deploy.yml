@@ -1,0 +1,36 @@
+name: Deploy T-Learn Demo
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          # SSH config — чтобы НЕ спрашивал "yes/no"
+          echo "Host prodserver
+            HostName ${{ secrets.SERVER_HOST }}
+            User ${{ secrets.SERVER_USER }}
+            Port ${{ secrets.SERVER_PORT }}
+            IdentityFile ~/.ssh/id_ed25519
+            StrictHostKeyChecking=no" >> ~/.ssh/config
+
+      - name: Deploy to server
+        run: |
+          ssh prodserver "
+            cd /home/project/T-learn-demo &&
+            git pull &&
+            docker compose -f docker-compose.prod.yml down &&
+            docker compose -f docker-compose.prod.yml up --build -d
+          "
