@@ -59,7 +59,7 @@ class DeckServiceImplTest {
             redisTemplate,
             jdbc,
             ollamaService,
-                rateLimitService);
+            rateLimitService);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
   }

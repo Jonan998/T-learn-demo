@@ -58,14 +58,14 @@ public class DeckServiceImpl implements DeckService {
 
   @Override
   public List<WordDto> getNewDeck(int userId) {
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info("Запрос новой колоды для userId={}", userId);
 
@@ -85,7 +85,7 @@ public class DeckServiceImpl implements DeckService {
             .orElseThrow(
                 () -> {
                   log.error("Пользователь {} не найден", userId);
-                    return new NotFoundException("Пользователь не найден");
+                  return new NotFoundException("Пользователь не найден");
                 });
 
     int limit = user.getLimitNew();
@@ -105,16 +105,19 @@ public class DeckServiceImpl implements DeckService {
               .orElseThrow(
                   () -> {
                     log.error("Слово {} не найдено", dto.getId());
-                      return new NotFoundException("Слово не найдено");
+                    return new NotFoundException("Слово не найдено");
                   });
 
       Integer dictionaryId = wordRepository.findDictionaryId(dto.getId());
 
-        Dictionary dict = dictionaryRepository.findById(dictionaryId)
-                .orElseThrow(() -> {
+      Dictionary dict =
+          dictionaryRepository
+              .findById(dictionaryId)
+              .orElseThrow(
+                  () -> {
                     log.error("Словарь {} не найден", dictionaryId);
                     return new NotFoundException("Словарь не найден");
-                });
+                  });
 
       cards.add(
           new CardsWords(user, word, dict, 0, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
@@ -143,14 +146,14 @@ public class DeckServiceImpl implements DeckService {
    */
   @Override
   public List<WordDto> getRepeatDeck(int userId) {
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info("Запрос колоды повторения для userId={}", userId);
 
