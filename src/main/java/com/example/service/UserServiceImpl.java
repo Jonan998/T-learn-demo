@@ -2,11 +2,17 @@ package com.example.service;
 
 import com.example.dto.UserDto;
 import com.example.dto.UserLimitsView;
+import com.example.exception.AuthenticationException;
+import com.example.exception.TooManyRequestException;
 import com.example.mapper.UserMapper;
 import com.example.model.User;
 import com.example.repository.UserRepository;
+
+import java.time.Duration;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +22,14 @@ public class UserServiceImpl implements UserService {
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
+  private final RateLimitService rateLimitService;
 
   public UserServiceImpl(
-      UserRepository repository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+      UserRepository repository, PasswordEncoder passwordEncoder, UserMapper userMapper, RateLimitService rateLimitService) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
+    this.rateLimitService = rateLimitService;
   }
 
   @Override
@@ -59,6 +67,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto getUserLimits(int userId) {
+
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
+
     log.info("Запрос лимитов пользователя userId={}", userId);
 
     UserLimitsView limitsView = repository.findUserLimits(userId);
@@ -84,6 +102,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void updateUserSettings(int userId, UserDto dto) {
+
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
+
     log.info("Обновление настроек пользователя userId={}", userId);
 
     User user = repository.findById(userId).orElse(null);

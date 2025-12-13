@@ -2,12 +2,18 @@ package com.example.service;
 
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
+import com.example.exception.AuthenticationException;
+import com.example.exception.TooManyRequestException;
 import com.example.mapper.DictionaryMapper;
 import com.example.model.Dictionary;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
+
+import java.time.Duration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,14 +22,17 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryRepository repository;
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
+  private final RateLimitService rateLimitService;
 
   public DictionaryServiceImpl(
       DictionaryRepository repository,
       DictionaryMapper dictionaryMapper,
-      WordRepository wordRepository) {
+      WordRepository wordRepository,
+      RateLimitService rateLimitService) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
+    this.rateLimitService = rateLimitService;
   }
 
   @Override
@@ -47,6 +56,16 @@ public class DictionaryServiceImpl implements DictionaryService {
 
   @Override
   public List<DictionaryDto> getUserDictionaries(int userId) {
+
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
+
     log.info("Получение словарей для userId={}", userId);
 
     List<DictionaryDto> dictionaries = repository.findUserDictionaries(userId);

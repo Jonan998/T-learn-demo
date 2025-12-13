@@ -1,14 +1,21 @@
 package com.example.service;
 
 import com.example.dto.CardsWordsDto;
+import com.example.exception.AuthenticationException;
+import com.example.exception.NotFoundException;
+import com.example.exception.TooManyRequestException;
 import com.example.mapper.CardsWordsMapper;
 import com.example.model.*;
 import com.example.repository.*;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,18 +27,21 @@ public class CardsWordsServiceImpl implements CardsWordsService {
   private final WordRepository wordRepository;
   private final DictionaryRepository dictionaryRepository;
   private final CardsWordsMapper cardsWordsMapper;
+  private final RateLimitService rateLimitService;
 
   public CardsWordsServiceImpl(
       CardsWordsRepository cardsWordsRepository,
       UserRepository userRepository,
       WordRepository wordRepository,
       DictionaryRepository dictionaryRepository,
-      CardsWordsMapper cardsWordsMapper) {
+      CardsWordsMapper cardsWordsMapper,
+      RateLimitService rateLimitService) {
     this.cardsWordsRepository = cardsWordsRepository;
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.dictionaryRepository = dictionaryRepository;
     this.cardsWordsMapper = cardsWordsMapper;
+    this.rateLimitService = rateLimitService;
   }
 
   @Override
@@ -78,6 +88,14 @@ public class CardsWordsServiceImpl implements CardsWordsService {
   @Override
   @Transactional
   public void updateWordStatus(int userId, List<CardsWordsDto> updates) {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
 
     log.info(
         "Обновление статуса слов: userId={}, количество обновлений={}", userId, updates.size());
@@ -91,7 +109,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
               .orElseThrow(
                   () -> {
                     log.error("Карточка не найдена: userId={}, wordId={}", userId, dto.getWordId());
-                    return new RuntimeException("Карточка не найдена");
+                    return new NotFoundException("Карточка не найдена");
                   });
 
       int oldLvl = card.getStudyLevel();
