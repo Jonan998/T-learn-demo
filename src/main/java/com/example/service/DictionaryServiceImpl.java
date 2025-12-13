@@ -8,7 +8,6 @@ import com.example.mapper.DictionaryMapper;
 import com.example.model.Dictionary;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
-
 import java.time.Duration;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -57,14 +56,14 @@ public class DictionaryServiceImpl implements DictionaryService {
   @Override
   public List<DictionaryDto> getUserDictionaries(int userId) {
 
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info("Получение словарей для userId={}", userId);
 

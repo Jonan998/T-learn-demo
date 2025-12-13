@@ -6,10 +6,8 @@ import static org.mockito.Mockito.*;
 import com.example.dto.WordDto;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.WordRepository;
-
 import java.time.Duration;
 import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,24 +31,25 @@ class DictionaryServiceImplTest {
   void init() {
     MockitoAnnotations.openMocks(this);
 
-      when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
-              .thenReturn(false);
+    when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
+        .thenReturn(false);
 
-      SecurityContext context = SecurityContextHolder.createEmptyContext();
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-      UsernamePasswordAuthenticationToken auth =
-              new UsernamePasswordAuthenticationToken("testUser", null, List.of());
+    UsernamePasswordAuthenticationToken auth =
+        new UsernamePasswordAuthenticationToken("testUser", null, List.of());
 
-      context.setAuthentication(auth);
-      SecurityContextHolder.setContext(context);
+    context.setAuthentication(auth);
+    SecurityContextHolder.setContext(context);
 
-    dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, wordRepository,rateLimitService);
+    dictionaryService =
+        new DictionaryServiceImpl(dictionaryRepository, null, wordRepository, rateLimitService);
   }
 
-    @AfterEach
-    void clearSecurityContext() {
-        SecurityContextHolder.clearContext();
-    }
+  @AfterEach
+  void clearSecurityContext() {
+    SecurityContextHolder.clearContext();
+  }
 
   @Test
   void testGetWordsByDictionaryId() {

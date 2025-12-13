@@ -6,12 +6,10 @@ import static org.mockito.Mockito.*;
 import com.example.dto.CardsWordsDto;
 import com.example.model.CardsWords;
 import com.example.repository.CardsWordsRepository;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,29 +24,29 @@ class CardsWordsServiceImplTest {
 
   private CardsWordsService cardsWordsService;
 
-  @Mock
-  private RateLimitService rateLimitService;
+  @Mock private RateLimitService rateLimitService;
 
   @BeforeEach
   void init() {
     MockitoAnnotations.openMocks(this);
-      when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
-              .thenReturn(false);
+    when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
+        .thenReturn(false);
 
-      SecurityContext context = SecurityContextHolder.createEmptyContext();
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-      UsernamePasswordAuthenticationToken auth =
-              new UsernamePasswordAuthenticationToken("testUser", null, List.of());
+    UsernamePasswordAuthenticationToken auth =
+        new UsernamePasswordAuthenticationToken("testUser", null, List.of());
 
-      context.setAuthentication(auth);
-      SecurityContextHolder.setContext(context);
-    cardsWordsService = new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null, rateLimitService);
+    context.setAuthentication(auth);
+    SecurityContextHolder.setContext(context);
+    cardsWordsService =
+        new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null, rateLimitService);
   }
 
-    @AfterEach
-    void clearSecurityContext() {
-        SecurityContextHolder.clearContext();
-    }
+  @AfterEach
+  void clearSecurityContext() {
+    SecurityContextHolder.clearContext();
+  }
 
   @Test
   void testUpdateWordStatus_Level3() {

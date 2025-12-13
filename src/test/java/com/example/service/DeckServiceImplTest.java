@@ -77,7 +77,8 @@ class DeckServiceImplTest {
             ollamaService,
             rateLimitService);
 
-    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null, rateLimitService);
+    this.dictionaryService =
+        new DictionaryServiceImpl(dictionaryRepository, null, null, rateLimitService);
   }
 
   @AfterEach

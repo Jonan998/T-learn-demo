@@ -7,7 +7,6 @@ import com.example.exception.TooManyRequestException;
 import com.example.mapper.CardsWordsMapper;
 import com.example.model.*;
 import com.example.repository.*;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -88,14 +87,14 @@ public class CardsWordsServiceImpl implements CardsWordsService {
   @Override
   @Transactional
   public void updateWordStatus(int userId, List<CardsWordsDto> updates) {
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info(
         "Обновление статуса слов: userId={}, количество обновлений={}", userId, updates.size());

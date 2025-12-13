@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 import com.example.dto.UserDto;
 import com.example.dto.UserLimitsView;
 import com.example.repository.UserRepository;
+import java.time.Duration;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +16,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.time.Duration;
-import java.util.List;
 
 public class UserServiceImplTest {
 
@@ -30,24 +29,24 @@ public class UserServiceImplTest {
   void init() {
     MockitoAnnotations.openMocks(this);
 
-      when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
-              .thenReturn(false);
+    when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
+        .thenReturn(false);
 
-      SecurityContext context = SecurityContextHolder.createEmptyContext();
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-      UsernamePasswordAuthenticationToken auth =
-              new UsernamePasswordAuthenticationToken("testUser", null, List.of());
+    UsernamePasswordAuthenticationToken auth =
+        new UsernamePasswordAuthenticationToken("testUser", null, List.of());
 
-      context.setAuthentication(auth);
-      SecurityContextHolder.setContext(context);
+    context.setAuthentication(auth);
+    SecurityContextHolder.setContext(context);
 
-    userService = new UserServiceImpl(userRepository, null, null,rateLimitService);
+    userService = new UserServiceImpl(userRepository, null, null, rateLimitService);
   }
 
-    @AfterEach
-    void clearSecurityContext() {
-        SecurityContextHolder.clearContext();
-    }
+  @AfterEach
+  void clearSecurityContext() {
+    SecurityContextHolder.clearContext();
+  }
 
   @Test
   void testGetUserLimits() {

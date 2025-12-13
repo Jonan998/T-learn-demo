@@ -7,7 +7,6 @@ import com.example.exception.TooManyRequestException;
 import com.example.mapper.UserMapper;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,10 @@ public class UserServiceImpl implements UserService {
   private final RateLimitService rateLimitService;
 
   public UserServiceImpl(
-      UserRepository repository, PasswordEncoder passwordEncoder, UserMapper userMapper, RateLimitService rateLimitService) {
+      UserRepository repository,
+      PasswordEncoder passwordEncoder,
+      UserMapper userMapper,
+      RateLimitService rateLimitService) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
@@ -68,14 +70,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getUserLimits(int userId) {
 
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info("Запрос лимитов пользователя userId={}", userId);
 
@@ -103,14 +105,14 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateUserSettings(int userId, UserDto dto) {
 
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth == null || !auth.isAuthenticated()) {
-          throw new AuthenticationException("Требуется авторизация");
-      }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null || !auth.isAuthenticated()) {
+      throw new AuthenticationException("Требуется авторизация");
+    }
 
-      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
-          throw new TooManyRequestException("Слишком много запросов", 15);
-      }
+    if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+      throw new TooManyRequestException("Слишком много запросов", 15);
+    }
 
     log.info("Обновление настроек пользователя userId={}", userId);
 
