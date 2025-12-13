@@ -42,6 +42,8 @@ class DeckServiceImplTest {
 
   private OllamaService ollamaService;
 
+  private RateLimitService rateLimitService;
+
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
@@ -56,7 +58,8 @@ class DeckServiceImplTest {
             dictionaryRepository,
             redisTemplate,
             jdbc,
-            ollamaService);
+            ollamaService,
+                rateLimitService);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
   }

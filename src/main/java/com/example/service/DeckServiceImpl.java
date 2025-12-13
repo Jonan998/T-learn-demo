@@ -1,6 +1,9 @@
 package com.example.service;
 
 import com.example.dto.WordDto;
+import com.example.exception.AuthenticationException;
+import com.example.exception.NotFoundException;
+import com.example.exception.TooManyRequestException;
 import com.example.model.CardsWords;
 import com.example.model.Dictionary;
 import com.example.model.User;
@@ -17,6 +20,8 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -30,6 +35,7 @@ public class DeckServiceImpl implements DeckService {
   private final RedisTemplate<String, Object> redisTemplate;
   private final JdbcTemplate jdbc;
   private final OllamaService ollamaService;
+  private final RateLimitService rateLimitService;
 
   public DeckServiceImpl(
       UserRepository userRepository,
@@ -38,7 +44,8 @@ public class DeckServiceImpl implements DeckService {
       DictionaryRepository dictionaryRepository,
       RedisTemplate<String, Object> redisTemplate,
       JdbcTemplate jdbc,
-      OllamaService ollamaService) {
+      OllamaService ollamaService,
+      RateLimitService rateLimitService) {
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.cardsWordsRepository = cardsWordsRepository;
@@ -46,10 +53,19 @@ public class DeckServiceImpl implements DeckService {
     this.redisTemplate = redisTemplate;
     this.jdbc = jdbc;
     this.ollamaService = ollamaService;
+    this.rateLimitService = rateLimitService;
   }
 
   @Override
   public List<WordDto> getNewDeck(int userId) {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
 
     log.info("Запрос новой колоды для userId={}", userId);
 
@@ -69,7 +85,7 @@ public class DeckServiceImpl implements DeckService {
             .orElseThrow(
                 () -> {
                   log.error("Пользователь {} не найден", userId);
-                  return new RuntimeException("Пользователь не найден");
+                    return new NotFoundException("Пользователь не найден");
                 });
 
     int limit = user.getLimitNew();
@@ -89,12 +105,16 @@ public class DeckServiceImpl implements DeckService {
               .orElseThrow(
                   () -> {
                     log.error("Слово {} не найдено", dto.getId());
-                    return new RuntimeException("Слово не найдено");
+                      return new NotFoundException("Слово не найдено");
                   });
 
       Integer dictionaryId = wordRepository.findDictionaryId(dto.getId());
 
-      Dictionary dict = dictionaryRepository.findById(dictionaryId).orElseThrow();
+        Dictionary dict = dictionaryRepository.findById(dictionaryId)
+                .orElseThrow(() -> {
+                    log.error("Словарь {} не найден", dictionaryId);
+                    return new NotFoundException("Словарь не найден");
+                });
 
       cards.add(
           new CardsWords(user, word, dict, 0, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
@@ -123,6 +143,15 @@ public class DeckServiceImpl implements DeckService {
    */
   @Override
   public List<WordDto> getRepeatDeck(int userId) {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      if (auth == null || !auth.isAuthenticated()) {
+          throw new AuthenticationException("Требуется авторизация");
+      }
+
+      if (rateLimitService.isRateLimitExceeded(userId, 10, Duration.ofMinutes(1))) {
+          throw new TooManyRequestException("Слишком много запросов", 15);
+      }
+
     log.info("Запрос колоды повторения для userId={}", userId);
 
     String key = "user:" + userId + ":deck_repeat";
@@ -141,7 +170,7 @@ public class DeckServiceImpl implements DeckService {
             .orElseThrow(
                 () -> {
                   log.error("Пользователь {} не найден", userId);
-                  return new RuntimeException("Пользователь не найден");
+                  return new NotFoundException("Пользователь не найден");
                 });
 
     int limit = user.getLimitRepeat();
