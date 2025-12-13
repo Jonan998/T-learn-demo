@@ -12,13 +12,18 @@ import com.example.repository.CardsWordsRepository;
 import com.example.repository.DictionaryRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.WordRepository;
+import java.time.Duration;
 import java.util.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 class DeckServiceImplTest {
 
@@ -42,13 +47,24 @@ class DeckServiceImplTest {
 
   private OllamaService ollamaService;
 
-  private RateLimitService rateLimitService;
+  @Mock private RateLimitService rateLimitService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
 
     when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+
+    when(rateLimitService.isRateLimitExceeded(anyInt(), anyInt(), any(Duration.class)))
+        .thenReturn(false);
+
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
+
+    UsernamePasswordAuthenticationToken auth =
+        new UsernamePasswordAuthenticationToken("testUser", null, List.of());
+
+    context.setAuthentication(auth);
+    SecurityContextHolder.setContext(context);
 
     this.deckService =
         new DeckServiceImpl(
@@ -62,6 +78,11 @@ class DeckServiceImplTest {
             rateLimitService);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
+  }
+
+  @AfterEach
+  void clearSecurityContext() {
+    SecurityContextHolder.clearContext();
   }
 
   @Test
