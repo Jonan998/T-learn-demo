@@ -1,12 +1,13 @@
 package com.example.controller;
 
+import com.example.Security.UserPrincipal;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.service.AuthService;
 import com.example.service.DictionaryService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,7 +33,7 @@ public class DictionaryController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<WordDto> getWordsByDictionaryId(HttpServletRequest request) {
-    return service.getWordsByDictionaryId(authService.getUserId(request));
+  public List<WordDto> getWordsByDictionaryId(@AuthenticationPrincipal UserPrincipal user) {
+    return service.getWordsByDictionaryId(user.getId());
   }
 }

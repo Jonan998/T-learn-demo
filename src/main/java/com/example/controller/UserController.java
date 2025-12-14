@@ -1,11 +1,12 @@
 package com.example.controller;
 
+import com.example.Security.UserPrincipal;
 import com.example.dto.UserDto;
 import com.example.service.AuthService;
 import com.example.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,12 +42,13 @@ public class UserController {
   }
 
   @GetMapping(value = SETTING_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserDto getUserLimits(HttpServletRequest request) {
-    return service.getUserLimits(authService.getUserId(request));
+  public UserDto getUserLimits(@AuthenticationPrincipal UserPrincipal user) {
+    return service.getUserLimits(user.getId());
   }
 
   @PatchMapping(value = SETTING_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-  public void updateUserSettings(HttpServletRequest request, @RequestBody UserDto dto) {
-    service.updateUserSettings(authService.getUserId(request), dto);
+  public void updateUserSettings(
+      @AuthenticationPrincipal UserPrincipal user, @RequestBody UserDto dto) {
+    service.updateUserSettings(user.getId(), dto);
   }
 }

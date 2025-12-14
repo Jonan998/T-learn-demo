@@ -1,8 +1,9 @@
 package com.example.service;
 
+import com.example.Security.UserPrincipal;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             .findByName(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-    return new org.springframework.security.core.userdetails.User(
-        user.getName(),
-        user.getPassword(),
-        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+    return new UserPrincipal(
+        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
   }
 }

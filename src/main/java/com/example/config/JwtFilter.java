@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.Security.UserPrincipal;
 import com.example.service.UserDetailsServiceImpl;
 // Импорт JwtUtil может измениться, если ты его тоже переместил
 import io.jsonwebtoken.Claims;
@@ -9,9 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
 
-    String authHeader = request.getHeader("Authorization");
+    String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     // 1. Используем константу BEARER_PREFIX
     if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
@@ -47,19 +48,18 @@ public class JwtFilter extends OncePerRequestFilter {
       String username = claims.getSubject();
 
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        UserPrincipal principal = (UserPrincipal) userDetailsService.loadUserByUsername(username);
 
         UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+            new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
-
-        request.setAttribute("userId", claims.get("userId"));
       }
     } catch (Exception e) {
-      // nothing?
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
     }
 
     chain.doFilter(request, response);

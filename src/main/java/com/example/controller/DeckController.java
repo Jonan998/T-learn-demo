@@ -1,12 +1,13 @@
 package com.example.controller;
 
+import com.example.Security.UserPrincipal;
 import com.example.dto.CardsWordsDto;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,23 +31,23 @@ public class DeckController {
   }
 
   @GetMapping(value = "/words/new", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<WordDto> getNewWords(HttpServletRequest request) {
-    return deckService.getNewDeck(authService.getUserId(request));
+  public List<WordDto> getNewWords(@AuthenticationPrincipal UserPrincipal user) {
+    return deckService.getNewDeck(user.getId());
   }
 
   @GetMapping(value = "/words/repeat", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<WordDto> getRepeatWords(HttpServletRequest request) {
-    return deckService.getRepeatDeck(authService.getUserId(request));
+  public List<WordDto> getRepeatWords(@AuthenticationPrincipal UserPrincipal user) {
+    return deckService.getRepeatDeck(user.getId());
   }
 
   @GetMapping(value = "/dictionary", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<DictionaryDto> getUserDictionaries(HttpServletRequest request) {
-    return dictionaryService.getUserDictionaries(authService.getUserId(request));
+  public List<DictionaryDto> getUserDictionaries(@AuthenticationPrincipal UserPrincipal user) {
+    return dictionaryService.getUserDictionaries(user.getId());
   }
 
   @PatchMapping(value = "/progress", produces = MediaType.APPLICATION_JSON_VALUE)
   public void updateWordStatus(
-      HttpServletRequest request, @RequestBody List<CardsWordsDto> updates) {
-    cardsWordsService.updateWordStatus(authService.getUserId(request), updates);
+      @AuthenticationPrincipal UserPrincipal user, @RequestBody List<CardsWordsDto> updates) {
+    cardsWordsService.updateWordStatus(user.getId(), updates);
   }
 }

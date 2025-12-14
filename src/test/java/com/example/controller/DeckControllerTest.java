@@ -1,10 +1,12 @@
 package com.example.controller;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.Security.UserPrincipal;
 import com.example.dto.DictionaryDto;
 import com.example.dto.WordDto;
 import com.example.service.*;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,11 +43,14 @@ class DeckControllerTest {
     List<DictionaryDto> dictionaries =
         List.of(new DictionaryDto(1, "Basic", "EN"), new DictionaryDto(2, "Travel", "EN"));
 
+    UserPrincipal principal =
+        new UserPrincipal(1, "testUser", List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
     when(dictionaryService.getUserDictionaries(1)).thenReturn(dictionaries);
     when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(1);
 
     mockMvc
-        .perform(get("/learning/dictionary").param("user_id", "1"))
+        .perform(get("/learning/dictionary").with(user(principal)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].name").value("Basic"))
@@ -60,11 +66,13 @@ class DeckControllerTest {
             new WordDto(2, 0, "cat", "кошка", "trans:cat"),
             new WordDto(3, 0, "fish", "рыба", "trans:fish"));
 
-    when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(1);
+    UserPrincipal principal =
+        new UserPrincipal(1, "testUser", List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
     when(deckService.getNewDeck(1)).thenReturn(words);
 
     mockMvc
-        .perform(get("/learning/words/new"))
+        .perform(get("/learning/words/new").with(user(principal)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].studyLvl").value(0))
@@ -91,11 +99,13 @@ class DeckControllerTest {
             new WordDto(2, 5, "cat", "кошка", "trans:cat"),
             new WordDto(3, 1, "fish", "рыба", "trans:fish"));
 
+    UserPrincipal principal =
+        new UserPrincipal(4, "testUser", List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
     when(deckService.getRepeatDeck(4)).thenReturn(words);
-    when(authService.getUserId(any(HttpServletRequest.class))).thenReturn(4);
 
     mockMvc
-        .perform(get("/learning/words/repeat").param("user_id", "4"))
+        .perform(get("/learning/words/repeat").with(user(principal)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].id").value(1))
         .andExpect(jsonPath("$[0].studyLvl").value(4))
