@@ -1,13 +1,10 @@
 name: Deploy T-Learn Demo
 
 on:
-  pull_request:
-    types: [closed]
-    branches: ["master"]
+  workflow_dispatch:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +29,7 @@ jobs:
           ssh prodserver "
             cd /home/project/T-learn-demo &&
             git pull &&
+            mvn clean package &&
             docker-compose -f docker-compose.prod.yml down &&
             docker-compose -f docker-compose.prod.yml up --build -d
           "
