@@ -65,5 +65,9 @@ export default function (data) {
   let res5 = http.patch(`${BASE}/learning/progress`, progressBody, { headers });
   check(res5, { "progress PATCH 200": (r) => r.status === 200 });
 
+   let resDictionary = http.get(`${BASE}/learning/dictionary`, { headers });
+    check(resDictionary, { "dictionary 200": (r) => r.status === 200 });
+
+
   sleep(1);
 }
