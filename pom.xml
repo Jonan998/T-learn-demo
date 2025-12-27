@@ -36,6 +36,7 @@
         <checkstyle.version>3.3.1</checkstyle.version>
         <spotbugs.version>4.8.3.0</spotbugs.version>
         <resilience.version>2.2.0</resilience.version>
+        <flyway.version>10.10.0</flyway.version>
     </properties>
     <dependencies>
         <dependency>
@@ -127,9 +128,16 @@
             <artifactId>resilience4j-spring-boot3</artifactId>
             <version>${resilience.version}</version>
         </dependency>
-
-
-
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

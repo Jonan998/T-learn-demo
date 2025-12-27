@@ -9,12 +9,33 @@ services:
     restart: always
     networks:
       - monitoring
+  postgres:
+    image: postgres:15.6
+    container_name: postgres
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Azazazru228
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - monitoring
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d testdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
     build: .
     container_name: tlearndemo
     depends_on:
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
       - "8080:8080"
     environment:
@@ -58,3 +79,5 @@ networks:
 
 volumes:
   prometheus_data:
+  postgres_data:
+
