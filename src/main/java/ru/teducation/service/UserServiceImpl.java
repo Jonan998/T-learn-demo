@@ -1,6 +1,6 @@
 package ru.teducation.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
   public void createUser(
       String name,
       String password,
-      LocalDate createdAtNew,
-      LocalDate createdAtRepeat,
+      LocalDateTime createdAtNew,
+      LocalDateTime createdAtRepeat,
       int limitNew,
       int limitRepeat) {
     String encodedPassword = passwordEncoder.encode(password);

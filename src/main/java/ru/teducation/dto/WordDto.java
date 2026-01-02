@@ -31,14 +31,6 @@ public class WordDto {
     this.transcription = transcription;
   }
 
-  public WordDto(Integer id, int studyLvl, String engLang, String rusLang, String transcription) {
-    this.id = id;
-    this.studyLvl = studyLvl;
-    this.engLang = engLang;
-    this.rusLang = rusLang;
-    this.transcription = transcription;
-  }
-
   public WordDto(
       Integer id,
       int studyLvl,
