@@ -1,6 +1,6 @@
 package ru.teducation.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +25,8 @@ public class UserController {
   public void createUser(
       @RequestParam String name,
       @RequestParam String password,
-      @RequestParam(name = "created_at_new") LocalDate createdAtNew,
-      @RequestParam(name = "created_at_repeat") LocalDate createdAtRepeat,
+      @RequestParam(name = "created_at_new") LocalDateTime createdAtNew,
+      @RequestParam(name = "created_at_repeat") LocalDateTime createdAtRepeat,
       @RequestParam(name = "limit_new") int limitNew,
       @RequestParam(name = "limit_repeat") int limitRepeat) {
 

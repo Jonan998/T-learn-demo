@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.model.Word;
 
@@ -27,11 +28,12 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
       value =
           """
     SELECT
-        w.id AS id,
-        0 AS study_lvl,            -- здесь ставим вторым поле study_lvl
-        w.eng_lang AS engLang,
-        w.rus_lang AS rusLang,
-        w.transcription AS transcription
+        w.id               AS id,
+        0                  AS studyLvl,
+        w.eng_lang         AS engLang,
+        w.rus_lang         AS rusLang,
+        w.transcription    AS transcription,
+        dw.dictionary_id   AS dictionaryId
     FROM words w
     JOIN dictionary_words dw ON w.id = dw.word_id
     WHERE w.id NOT IN (
@@ -39,9 +41,9 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
     )
     ORDER BY RANDOM()
     LIMIT :limit
-""",
+    """,
       nativeQuery = true)
-  List<WordDto> getNewDeckWords(@Param("userId") int userId, @Param("limit") int limit);
+  List<NewDeckDto> getNewDeckWords(@Param("userId") int userId, @Param("limit") int limit);
 
   @Query(
       value =

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.teducation.Security.UserPrincipal;
 import ru.teducation.dto.CardsWordsDto;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.service.CardsWordsService;
 import ru.teducation.service.DeckService;
@@ -35,7 +36,7 @@ public class DeckController {
   }
 
   @GetMapping(value = NEW_WORDS_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<WordDto> getNewWords(@AuthenticationPrincipal UserPrincipal user) {
+  public List<NewDeckDto> getNewWords(@AuthenticationPrincipal UserPrincipal user) {
     return deckService.getNewDeck(user.getId());
   }
 
