@@ -38,6 +38,8 @@ services:
         condition: service_started
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATA_REDIS_HOST: redis
