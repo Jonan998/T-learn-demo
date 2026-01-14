@@ -22,7 +22,8 @@ public class Dictionary {
   private String description;
   private String language;
   private Integer ownerId;
-  private Boolean is_public;
+  @Column(name = "is_public")
+  private Boolean isPublic;
 
   @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
   @JsonIgnore
