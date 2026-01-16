@@ -70,7 +70,7 @@ class DeckServiceImplTest {
             jdbc,
             ollamaService);
 
-    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
+    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null, null);
   }
 
   @AfterEach

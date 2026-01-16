@@ -3,16 +3,23 @@ package ru.teducation.advice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.teducation.dto.ErrorResponse;
 import ru.teducation.exception.AuthenticationException;
+import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.exception.TooManyRequestException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorResponse("validation_error", "Некорректные данные запроса"));
+  }
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
@@ -44,5 +51,11 @@ public class GlobalExceptionAdvice {
         .body(
             new ErrorResponse(
                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
+  }
+
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(new ErrorResponse("conflict", "Такое название уже существует"));
   }
 }

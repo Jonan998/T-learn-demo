@@ -22,6 +22,13 @@ public class Dictionary {
   private String description;
   private String language;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "owner_id", nullable = false)
+  private User ownerId;
+
+  @Column(name = "is_public")
+  private Boolean isPublic;
+
   @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL)
   @JsonIgnore
   @Builder.Default
@@ -45,5 +52,14 @@ public class Dictionary {
 
   public Dictionary(String name) {
     this.name = name;
+  }
+
+  public Dictionary(
+      String name, String description, String language, User ownerId, Boolean isPublic) {
+    this.name = name;
+    this.description = description;
+    this.language = language;
+    this.ownerId = ownerId;
+    this.isPublic = isPublic;
   }
 }

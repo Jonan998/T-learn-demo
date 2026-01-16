@@ -127,6 +127,11 @@
             <artifactId>resilience4j-spring-boot3</artifactId>
             <version>${resilience.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
 
 
 
