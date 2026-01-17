@@ -1,6 +1,6 @@
 package ru.teducation.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import ru.teducation.dto.UserDto;
 
 public interface UserService {
@@ -9,8 +9,8 @@ public interface UserService {
   void createUser(
       String name,
       String password,
-      LocalDate createdAtNew,
-      LocalDate createdAtRepeat,
+      LocalDateTime createdAtNew,
+      LocalDateTime createdAtRepeat,
       int limitNew,
       int limitRepeat);
 
