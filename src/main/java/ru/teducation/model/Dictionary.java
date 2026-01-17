@@ -22,6 +22,7 @@ public class Dictionary {
   private String description;
   private String language;
   private Integer ownerId;
+
   @Column(name = "is_public")
   private Boolean isPublic;
 

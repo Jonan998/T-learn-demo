@@ -1,7 +1,7 @@
 package ru.teducation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Getter
@@ -13,8 +13,8 @@ import lombok.*;
 public class UserDto {
   private Integer id;
   private String name;
-  private LocalDate createdAtNew;
-  private LocalDate createdAtRepeat;
+  private LocalDateTime createdAtNew;
+  private LocalDateTime createdAtRepeat;
   private Integer limitNew;
   private Integer limitRepeat;
 
