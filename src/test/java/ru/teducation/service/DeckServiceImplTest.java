@@ -73,7 +73,7 @@ class DeckServiceImplTest {
             redisTemplate,
             jdbc,
             mistralService,
-                cardsWordsMapper);
+            cardsWordsMapper);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
   }

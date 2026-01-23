@@ -3,7 +3,6 @@ package ru.teducation.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -84,19 +83,18 @@ public class DeckServiceImpl implements DeckService {
     List<NewDeckDto> deck = wordRepository.getNewDeckWords(userId, limit);
     log.info("Получено {} слов из БД", deck.size());
 
-      List<CardsWords> cards =
-              deck.stream()
-                      .map(dto -> {
-                          Word word = wordRepository.getReferenceById(dto.getId());
-                          Dictionary dict =
-                                  dictionaryRepository.getReferenceById(dto.getDictionaryId());
+    List<CardsWords> cards =
+        deck.stream()
+            .map(
+                dto -> {
+                  Word word = wordRepository.getReferenceById(dto.getId());
+                  Dictionary dict = dictionaryRepository.getReferenceById(dto.getDictionaryId());
 
-                          return cardsWordsMapper.toEntity(user, word, dict, now);
-                      })
-                      .toList();
+                  return cardsWordsMapper.toEntity(user, word, dict, now);
+                })
+            .toList();
 
-
-      user.setCreatedAtNew(now);
+    user.setCreatedAtNew(now);
     userRepository.save(user);
 
     log.info("Дата получения новой колоды обновлена");

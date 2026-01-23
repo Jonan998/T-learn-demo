@@ -32,9 +32,9 @@ public class AppProperties {
   }
 
   @Getter
-    @Setter
-    public static class Mistral{
-      private String api;
-      private String url;
+  @Setter
+  public static class Mistral {
+    private String api;
+    private String url;
   }
 }

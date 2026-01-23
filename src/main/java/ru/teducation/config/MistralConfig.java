@@ -9,19 +9,19 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class MistralConfig {
 
-    private final AppProperties properties;
+  private final AppProperties properties;
 
-    public MistralConfig(AppProperties properties){
-        this.properties = properties;
-    }
+  public MistralConfig(AppProperties properties) {
+    this.properties = properties;
+  }
 
-    protected String api(){
-        return properties.getMistral().getApi();
-    }
+  protected String api() {
+    return properties.getMistral().getApi();
+  }
 
-    protected String url(){
-        return properties.getMistral().getUrl();
-    }
+  protected String url() {
+    return properties.getMistral().getUrl();
+  }
 
   @Bean
   public RestClient mistralRestClient() {
