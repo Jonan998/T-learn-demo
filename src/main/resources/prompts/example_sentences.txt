@@ -1,0 +1,11 @@
+For each word, write ONE short English sentence.
+
+                Rules:
+                - Sentence must contain the word.
+                - Use simple daily English.
+                - No explanations.
+                - One sentence per line.
+                - No numbering.
+
+                Words:
+                %s

@@ -15,6 +15,8 @@ public class AppProperties {
 
   private RateLimit rateLimit = new RateLimit();
 
+  private Mistral mistral = new Mistral();
+
   @Getter
   @Setter
   public static class Jwt {
@@ -27,5 +29,12 @@ public class AppProperties {
   public static class RateLimit {
     private int retryAfterSeconds = 10;
     private String message = "Слишком много запросов";
+  }
+
+  @Getter
+    @Setter
+    public static class Mistral{
+      private String api;
+      private String url;
   }
 }

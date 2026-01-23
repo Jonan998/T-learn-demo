@@ -1,14 +1,17 @@
 package ru.teducation.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.io.IOException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
+
 
 @Slf4j
 @Service
@@ -18,47 +21,46 @@ public class MistralService {
   private static final String MODEL = "mistral-small";
   private static final String API = "/v1/chat/completions";
 
-  private final WebClient mistralWebClient;
+  private final RestClient mistralRestClient;
+  private final PromptProvider promptProvider;
 
   public List<String> generateExampleSentences(List<String> words) {
 
-    String prompt =
-        """
-                For each word, write ONE short English sentence.
-
-                Rules:
-                - Sentence must contain the word.
-                - Use simple daily English.
-                - No explanations.
-                - One sentence per line.
-                - No numbering.
-
-                Words:
-                %s
-                """
-            .formatted(String.join(", ", words));
+      String prompt;
+      try {
+          prompt = promptProvider.exampleSentencesPrompt(
+                  String.join(", ", words));
+      } catch (IOException e) {
+          log.warn("Не удалось загрузить промпт", e);
+          return List.of();
+      }
 
     long start = System.currentTimeMillis();
 
-    String rawResponse =
-        mistralWebClient
-            .post()
-            .uri(API)
-            .bodyValue(
-                Map.of(
-                    "model", MODEL, "messages", List.of(Map.of("role", "user", "content", prompt))))
-            .retrieve()
-            .bodyToMono(JsonNode.class)
-            .map(json -> json.path("choices").get(0).path("message").path("content").asText())
-            .timeout(Duration.ofSeconds(6))
-            .doOnError(e -> log.error("Mistral API error", e))
-            .onErrorReturn("")
-            .block();
+      JsonNode rawResponse =
+              mistralRestClient
+                      .post()
+                      .uri(API)
+                      .body(
+                              Map.of(
+                                      "model", MODEL,
+                                      "messages", List.of(
+                                              Map.of("role", "user", "content", prompt))))
+                      .retrieve()
+                      .body(JsonNode.class);
+
+      String content =
+              Optional.ofNullable(rawResponse)
+                      .map(r -> r.path("choices"))
+                      .filter(JsonNode::isArray)
+                      .filter(c -> !c.isEmpty())
+                      .map(c -> c.get(0).path("message").path("content").asText(""))
+                      .orElse("");
 
     log.info(
         "Mistral сгенерировал {} слова за {} мс", words.size(), System.currentTimeMillis() - start);
 
-    return parseSentences(rawResponse);
+    return parseSentences(content);
   }
 
   private List<String> parseSentences(String text) {

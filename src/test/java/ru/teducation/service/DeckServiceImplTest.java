@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import ru.teducation.dto.DictionaryDto;
 import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
+import ru.teducation.mapper.CardsWordsMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.User;
 import ru.teducation.model.Word;
@@ -40,6 +41,8 @@ class DeckServiceImplTest {
   @Mock private RedisTemplate<String, Object> redisTemplate;
 
   @Mock private ValueOperations<String, Object> valueOperations;
+
+  @Mock private CardsWordsMapper cardsWordsMapper;
 
   private DeckService deckService;
 
@@ -69,7 +72,8 @@ class DeckServiceImplTest {
             dictionaryRepository,
             redisTemplate,
             jdbc,
-            mistralService);
+            mistralService,
+                cardsWordsMapper);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
   }

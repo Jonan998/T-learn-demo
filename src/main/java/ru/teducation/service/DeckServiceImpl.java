@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.exception.NotFoundException;
+import ru.teducation.mapper.CardsWordsMapper;
 import ru.teducation.model.CardsWords;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.User;
@@ -32,6 +33,7 @@ public class DeckServiceImpl implements DeckService {
   private final RedisTemplate<String, Object> redisTemplate;
   private final JdbcTemplate jdbc;
   private final MistralService mistralService;
+  private final CardsWordsMapper cardsWordsMapper;
 
   public DeckServiceImpl(
       UserRepository userRepository,
@@ -40,7 +42,8 @@ public class DeckServiceImpl implements DeckService {
       DictionaryRepository dictionaryRepository,
       RedisTemplate<String, Object> redisTemplate,
       JdbcTemplate jdbc,
-      MistralService mistralService) {
+      MistralService mistralService,
+      CardsWordsMapper cardsWordsMapper) {
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.cardsWordsRepository = cardsWordsRepository;
@@ -48,6 +51,7 @@ public class DeckServiceImpl implements DeckService {
     this.redisTemplate = redisTemplate;
     this.jdbc = jdbc;
     this.mistralService = mistralService;
+    this.cardsWordsMapper = cardsWordsMapper;
   }
 
   @Override
@@ -80,17 +84,19 @@ public class DeckServiceImpl implements DeckService {
     List<NewDeckDto> deck = wordRepository.getNewDeckWords(userId, limit);
     log.info("Получено {} слов из БД", deck.size());
 
-    List<CardsWords> cards = new ArrayList<>();
+      List<CardsWords> cards =
+              deck.stream()
+                      .map(dto -> {
+                          Word word = wordRepository.getReferenceById(dto.getId());
+                          Dictionary dict =
+                                  dictionaryRepository.getReferenceById(dto.getDictionaryId());
 
-    for (NewDeckDto dto : deck) {
+                          return cardsWordsMapper.toEntity(user, word, dict, now);
+                      })
+                      .toList();
 
-      Word word = wordRepository.getReferenceById(dto.getId());
-      Dictionary dict = dictionaryRepository.getReferenceById(dto.getDictionaryId());
 
-      cards.add(new CardsWords(user, word, dict, 0, now));
-    }
-
-    user.setCreatedAtNew(now);
+      user.setCreatedAtNew(now);
     userRepository.save(user);
 
     log.info("Дата получения новой колоды обновлена");
