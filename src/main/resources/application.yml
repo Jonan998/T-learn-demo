@@ -34,3 +34,7 @@ app:
   rate-limit:
     retry-after-seconds: 10
     message: "Слишком много запросов"
+  mistral:
+    api: ${MISTRAL_API_KEY}
+    url: "https://api.mistral.ai"
+

@@ -15,7 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
+import ru.teducation.mapper.CardsWordsMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.User;
 import ru.teducation.model.Word;
@@ -40,11 +42,13 @@ class DeckServiceImplTest {
 
   @Mock private ValueOperations<String, Object> valueOperations;
 
+  @Mock private CardsWordsMapper cardsWordsMapper;
+
   private DeckService deckService;
 
   private DictionaryService dictionaryService;
 
-  private OllamaService ollamaService;
+  private MistralService mistralService;
 
   @BeforeEach
   void setUp() {
@@ -68,7 +72,8 @@ class DeckServiceImplTest {
             dictionaryRepository,
             redisTemplate,
             jdbc,
-            ollamaService);
+            mistralService,
+            cardsWordsMapper);
 
     this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null);
   }
@@ -85,10 +90,8 @@ class DeckServiceImplTest {
     user.setId(userId);
     user.setLimitNew(2);
 
-    WordDto wordDto1 = new WordDto();
-    wordDto1.setId(101);
-    WordDto wordDto2 = new WordDto();
-    wordDto2.setId(102);
+    NewDeckDto dto1 = new NewDeckDto(101, 0, "dog", "собака", "tr", 201);
+    NewDeckDto dto2 = new NewDeckDto(102, 0, "cat", "кошка", "tr", 202);
 
     Word word1 = new Word();
     word1.setId(101);
@@ -102,7 +105,7 @@ class DeckServiceImplTest {
 
     when(valueOperations.get("user:1:deck_new")).thenReturn(null);
     when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-    when(wordRepository.getNewDeckWords(userId, 2)).thenReturn(Arrays.asList(wordDto1, wordDto2));
+    when(wordRepository.getNewDeckWords(userId, 2)).thenReturn(List.of(dto1, dto2));
     when(wordRepository.findById(101)).thenReturn(Optional.of(word1));
     when(wordRepository.findById(102)).thenReturn(Optional.of(word2));
     when(wordRepository.findDictionaryId(101)).thenReturn(201);
@@ -111,7 +114,7 @@ class DeckServiceImplTest {
     when(dictionaryRepository.findById(202)).thenReturn(Optional.of(dict2));
     when(cardsWordsRepository.saveAll(anyList())).thenReturn(null);
 
-    List<WordDto> result = deckService.getNewDeck(userId);
+    List<NewDeckDto> result = deckService.getNewDeck(userId);
 
     assertEquals(2, result.size());
     verify(valueOperations, times(1)).set(eq("user:1:deck_new"), anyList(), any());

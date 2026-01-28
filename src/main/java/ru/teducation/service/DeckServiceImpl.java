@@ -3,14 +3,15 @@ package ru.teducation.service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.exception.NotFoundException;
+import ru.teducation.mapper.CardsWordsMapper;
 import ru.teducation.model.CardsWords;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.User;
@@ -30,7 +31,8 @@ public class DeckServiceImpl implements DeckService {
   private final DictionaryRepository dictionaryRepository;
   private final RedisTemplate<String, Object> redisTemplate;
   private final JdbcTemplate jdbc;
-  private final OllamaService ollamaService;
+  private final MistralService mistralService;
+  private final CardsWordsMapper cardsWordsMapper;
 
   public DeckServiceImpl(
       UserRepository userRepository,
@@ -39,23 +41,26 @@ public class DeckServiceImpl implements DeckService {
       DictionaryRepository dictionaryRepository,
       RedisTemplate<String, Object> redisTemplate,
       JdbcTemplate jdbc,
-      OllamaService ollamaService) {
+      MistralService mistralService,
+      CardsWordsMapper cardsWordsMapper) {
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.cardsWordsRepository = cardsWordsRepository;
     this.dictionaryRepository = dictionaryRepository;
     this.redisTemplate = redisTemplate;
     this.jdbc = jdbc;
-    this.ollamaService = ollamaService;
+    this.mistralService = mistralService;
+    this.cardsWordsMapper = cardsWordsMapper;
   }
 
   @Override
-  public List<WordDto> getNewDeck(int userId) {
+  public List<NewDeckDto> getNewDeck(int userId) {
     log.info("Запрос новой колоды для userId={}", userId);
+    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
     String key = "user:" + userId + ":deck_new";
 
-    List<WordDto> cached = (List<WordDto>) redisTemplate.opsForValue().get(key);
+    List<NewDeckDto> cached = (List<NewDeckDto>) redisTemplate.opsForValue().get(key);
     if (cached != null && !cached.isEmpty()) {
       log.info("Колода найдена в Redis по ключу {}", key);
       return cached;
@@ -75,37 +80,24 @@ public class DeckServiceImpl implements DeckService {
     int limit = user.getLimitNew();
     log.debug("Предел новых слов: {}", limit);
 
-    List<WordDto> deck = wordRepository.getNewDeckWords(userId, limit);
+    List<NewDeckDto> deck = wordRepository.getNewDeckWords(userId, limit);
     log.info("Получено {} слов из БД", deck.size());
 
-    List<CardsWords> cards = new ArrayList<>();
+    List<CardsWords> cards =
+        deck.stream()
+            .map(
+                dto -> {
+                  Word word = wordRepository.getReferenceById(dto.getId());
+                  Dictionary dict = dictionaryRepository.getReferenceById(dto.getDictionaryId());
 
-    for (WordDto dto : deck) {
-      log.debug("Обрабатываем слово id={}", dto.getId());
+                  return cardsWordsMapper.toEntity(user, word, dict, now);
+                })
+            .toList();
 
-      Word word =
-          wordRepository
-              .findById(dto.getId())
-              .orElseThrow(
-                  () -> {
-                    log.error("Слово {} не найдено", dto.getId());
-                    return new NotFoundException("Слово не найдено");
-                  });
+    user.setCreatedAtNew(now);
+    userRepository.save(user);
 
-      Integer dictionaryId = wordRepository.findDictionaryId(dto.getId());
-
-      Dictionary dict =
-          dictionaryRepository
-              .findById(dictionaryId)
-              .orElseThrow(
-                  () -> {
-                    log.error("Словарь {} не найден", dictionaryId);
-                    return new NotFoundException("Словарь не найден");
-                  });
-
-      cards.add(
-          new CardsWords(user, word, dict, 0, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
-    }
+    log.info("Дата получения новой колоды обновлена");
 
     cardsWordsRepository.saveAll(cards);
     log.info("Сохранено {} карточек в cards_words", cards.size());
@@ -159,7 +151,12 @@ public class DeckServiceImpl implements DeckService {
     try {
       List<String> words = deck.stream().map(WordDto::getEngLang).toList();
 
-      List<String> examples = ollamaService.generateExampleSentencesBatch(words);
+      log.info("Слова для Mistral: {}", words);
+
+      List<String> examples = mistralService.generateExampleSentences(words);
+
+      log.info("Количество слов={}", examples.size());
+      log.debug("Примеры={}", examples);
 
       for (int i = 0; i < deck.size() && i < examples.size(); i++) {
         deck.get(i).setExample(examples.get(i));
@@ -168,11 +165,18 @@ public class DeckServiceImpl implements DeckService {
       log.info("ИИ примеры успешно сгенерированы");
 
     } catch (Exception e) {
-      log.warn("Ошибка генерации примеров через Ollama", e);
+      log.warn("Ошибка генерации примеров через Mistral", e);
     }
 
     redisTemplate.opsForValue().set(key, deck, Duration.ofHours(12));
     log.info("Колода повторения сохранена в Redis на 12 часов");
+
+    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+
+    user.setCreatedAtRepeat(now);
+    userRepository.save(user);
+
+    log.info("Дата получения колоды для повторения обновлена");
 
     return deck;
   }

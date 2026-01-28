@@ -2,7 +2,7 @@ package ru.teducation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
@@ -24,10 +24,10 @@ public class User {
   private String password;
 
   @Column(name = "created_ad_new")
-  private LocalDate createdAtNew;
+  private LocalDateTime createdAtNew;
 
   @Column(name = "created_ad_repeat")
-  private LocalDate createdAtRepeat;
+  private LocalDateTime createdAtRepeat;
 
   @Column(name = "limit_new")
   private int limitNew;
@@ -46,8 +46,8 @@ public class User {
   public User(
       String name,
       String password,
-      LocalDate createdAtNew,
-      LocalDate createdAtRepeat,
+      LocalDateTime createdAtNew,
+      LocalDateTime createdAtRepeat,
       int limitNew,
       int limitRepeat) {
     this.name = name;
