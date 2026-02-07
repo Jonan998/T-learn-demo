@@ -59,7 +59,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
     Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
 
     CardsWords card =
-        new CardsWords(user.get(), word.get(), dictionary.get(), studyLvl, nextReview);
+        new CardsWords(user.get(), word.get(), dictionary.get(), studyLvl, nextReview, null);
     cardsWordsRepository.save(card);
   }
 
@@ -77,7 +77,8 @@ public class CardsWordsServiceImpl implements CardsWordsService {
               word.get(),
               dictionary.get(),
               cardsWordsDto.getStudyLevel(),
-              cardsWordsDto.getNextReview());
+              cardsWordsDto.getNextReview(),
+              null);
       CardsWords savedCard = cardsWordsRepository.save(card);
       return cardsWordsMapper.toDto(savedCard);
     }
@@ -104,6 +105,14 @@ public class CardsWordsServiceImpl implements CardsWordsService {
 
       int oldLvl = card.getStudyLevel();
       int newLvl = dto.getStudyLevel();
+
+      if (newLvl == 6) {
+          if (card.getLearnedAt() == null) {
+              card.setLearnedAt(LocalDateTime.now());
+          }
+      } else {
+          card.setLearnedAt(null);
+      }
 
       log.debug(
           "Старый уровень={}, новый уровень={} для wordId={}", oldLvl, newLvl, dto.getWordId());
