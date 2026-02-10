@@ -35,7 +35,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
     this.userRepository = userRepository;
-    this.dictionaryMapper = dictionaryMapper;
+    this.dictionaryWordsMapper = dictionaryWordsMapper;
   }
 
   @Override
@@ -111,18 +111,18 @@ public class DictionaryServiceImpl implements DictionaryService {
     return wordRepository.searchWord(prefix);
   }
 
-  @Override
-  public void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId) {
-        User owner = userRepository.findById(userId).orElseThrow(
-                () -> {
-                    log.warn("Пользователь {} не найден", userId);
-                    return new NotFoundException("Пользователь не найден");
-                }
-        );
-
-        int dictionaryId = dictionary.getId();
-        int wordId = word.getId();
-
-      DictionaryWords word = d
-  }
+//  @Override
+//  public void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId) {
+//        User owner = userRepository.findById(userId).orElseThrow(
+//                () -> {
+//                    log.warn("Пользователь {} не найден", userId);
+//                    return new NotFoundException("Пользователь не найден");
+//                }
+//        );
+//
+//        int dictionaryId = dictionary.getId();
+//        int wordId = word.getId();
+//
+//      DictionaryWords word = d
+//  }
 }
