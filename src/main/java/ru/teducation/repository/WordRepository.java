@@ -70,4 +70,14 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
         """,
       nativeQuery = true)
   List<WordDto> findWordsByDictionaryId(@Param("dictionaryId") Integer dictionaryId);
+
+  @Query(
+      value =
+          """
+                          SELCT w.eng_lang
+                          FROM words w
+                          WHERE w.eng_lang LIKE CONCAT(:prefix,'%')
+                          """,
+      nativeQuery = true)
+  List<String> searchWord(@Param("prefix") String prefix);
 }

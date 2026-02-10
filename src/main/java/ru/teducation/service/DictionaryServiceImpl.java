@@ -8,7 +8,9 @@ import ru.teducation.dto.WordDto;
 import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.mapper.DictionaryMapper;
+import ru.teducation.mapper.DictionaryWordsMapper;
 import ru.teducation.model.Dictionary;
+import ru.teducation.model.DictionaryWords;
 import ru.teducation.model.User;
 import ru.teducation.repository.DictionaryRepository;
 import ru.teducation.repository.UserRepository;
@@ -21,16 +23,19 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
   private final UserRepository userRepository;
+  public final DictionaryWordsMapper dictionaryWordsMapper;
 
   public DictionaryServiceImpl(
       DictionaryRepository repository,
       DictionaryMapper dictionaryMapper,
       WordRepository wordRepository,
-      UserRepository userRepository) {
+      UserRepository userRepository,
+      DictionaryWordsMapper dictionaryWordsMapper) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
     this.userRepository = userRepository;
+    this.dictionaryMapper = dictionaryMapper;
   }
 
   @Override
@@ -91,13 +96,7 @@ public class DictionaryServiceImpl implements DictionaryService {
       throw new ConflictException("Словарь с таким именем уже есть");
     }
 
-    Dictionary customDictionary = new Dictionary();
-    customDictionary.setName(dictionary.getName());
-    customDictionary.setDescription(dictionary.getDescription());
-    customDictionary.setLanguage("en-ru");
-    customDictionary.setOwnerId(owner);
-    customDictionary.setIsPublic(Boolean.FALSE);
-
+    Dictionary customDictionary = dictionaryMapper.toEntity(dictionary, owner);
     repository.save(customDictionary);
 
     log.info(
@@ -105,5 +104,25 @@ public class DictionaryServiceImpl implements DictionaryService {
         customDictionary.getName(),
         owner.getId(),
         customDictionary.getIsPublic());
+  }
+
+  @Override
+  public List<String> searchWord(String prefix) {
+    return wordRepository.searchWord(prefix);
+  }
+
+  @Override
+  public void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId) {
+        User owner = userRepository.findById(userId).orElseThrow(
+                () -> {
+                    log.warn("Пользователь {} не найден", userId);
+                    return new NotFoundException("Пользователь не найден");
+                }
+        );
+
+        int dictionaryId = dictionary.getId();
+        int wordId = word.getId();
+
+      DictionaryWords word = d
   }
 }

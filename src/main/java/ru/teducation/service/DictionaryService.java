@@ -14,4 +14,8 @@ public interface DictionaryService {
   List<WordDto> getWordsByDictionaryId(int dictionaryId);
 
   void createCustomDictionary(DictionaryDto dictionary, Integer userId);
+
+  void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId);
+
+  List<String> searchWord(String prefix);
 }
