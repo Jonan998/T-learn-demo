@@ -12,4 +12,6 @@ public interface DictionaryService {
   List<DictionaryDto> getUserDictionaries(int userId);
 
   List<WordDto> getWordsByDictionaryId(int dictionaryId);
+
+  void createCustomDictionary(DictionaryDto dictionary, Integer userId);
 }

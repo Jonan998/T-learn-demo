@@ -3,17 +3,24 @@ package ru.teducation.advice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.teducation.dto.ErrorResponse;
 import ru.teducation.exception.AuthenticationException;
+import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.exception.TooManyRequestException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorResponse("validation_error", "Некорректные данные запроса"));
+  }
 
   @ExceptionHandler(AuthenticationException.class)
   public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
@@ -51,5 +58,6 @@ public class GlobalExceptionAdvice {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
     return new ErrorResponse("bad_request", ex.getMessage());
+
   }
 }

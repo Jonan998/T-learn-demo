@@ -5,9 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.teducation.dto.DictionaryDto;
 import ru.teducation.dto.WordDto;
+import ru.teducation.exception.ConflictException;
+import ru.teducation.exception.NotFoundException;
 import ru.teducation.mapper.DictionaryMapper;
 import ru.teducation.model.Dictionary;
+import ru.teducation.model.User;
 import ru.teducation.repository.DictionaryRepository;
+import ru.teducation.repository.UserRepository;
 import ru.teducation.repository.WordRepository;
 
 @Slf4j
@@ -16,15 +20,17 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryRepository repository;
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
-  ;
+  private final UserRepository userRepository;
 
   public DictionaryServiceImpl(
       DictionaryRepository repository,
       DictionaryMapper dictionaryMapper,
-      WordRepository wordRepository) {
+      WordRepository wordRepository,
+      UserRepository userRepository) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -66,5 +72,38 @@ public class DictionaryServiceImpl implements DictionaryService {
     log.debug("Найдено {} слов в dictionaryId={}", words.size(), dictionaryId);
 
     return words;
+  }
+
+  @Override
+  public void createCustomDictionary(DictionaryDto dictionary, Integer userId) {
+    User owner =
+        userRepository
+            .findById(userId)
+            .orElseThrow(
+                () -> {
+                  log.warn("Пользователь {} не найден", userId);
+                  return new NotFoundException("Пользователь не найден");
+                });
+
+    if (repository.existsByNameAndOwnerId(dictionary.getName(), owner)) {
+      log.warn(
+          "Попытка создать дубликат словаря name='{}' для userId={}", dictionary.getName(), userId);
+      throw new ConflictException("Словарь с таким именем уже есть");
+    }
+
+    Dictionary customDictionary = new Dictionary();
+    customDictionary.setName(dictionary.getName());
+    customDictionary.setDescription(dictionary.getDescription());
+    customDictionary.setLanguage("en-ru");
+    customDictionary.setOwnerId(owner);
+    customDictionary.setIsPublic(Boolean.FALSE);
+
+    repository.save(customDictionary);
+
+    log.info(
+        "Создан кастомный словарь name='{}', ownerId={}, isPublic={}",
+        customDictionary.getName(),
+        owner.getId(),
+        customDictionary.getIsPublic());
   }
 }
