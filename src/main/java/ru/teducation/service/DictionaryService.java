@@ -2,6 +2,7 @@ package ru.teducation.service;
 
 import java.util.List;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.DictionaryWordsDto;
 import ru.teducation.dto.WordDto;
 
 public interface DictionaryService {
@@ -15,7 +16,7 @@ public interface DictionaryService {
 
   void createCustomDictionary(DictionaryDto dictionary, Integer userId);
 
-  void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId);
+  void addNewWord(Integer userId, DictionaryWordsDto dictionaryWords);
 
   List<String> searchWord(String prefix);
 }

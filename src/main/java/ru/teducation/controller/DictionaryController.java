@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.teducation.Security.UserPrincipal;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.DictionaryWordsDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.service.DictionaryService;
 
@@ -17,6 +18,7 @@ public class DictionaryController {
   private final DictionaryService service;
 
   private static final String CREATE_PATH = "/create";
+  private static final String SEARCH_WORD = "/add";
 
   public DictionaryController(DictionaryService service) {
     this.service = service;
@@ -28,7 +30,7 @@ public class DictionaryController {
     service.createDictionary(name, description, language);
   }
 
-  @GetMapping(value = "/{id}", produces = "application/json; charset=UTF-8")
+  @GetMapping(value = "/{id:\\\\d+}", produces = "application/json; charset=UTF-8")
   public DictionaryDto getDictionary(@PathVariable int id) {
     return service.getDictionary(id);
   }
@@ -43,5 +45,11 @@ public class DictionaryController {
   public void createCustomDictionary(
       @Valid @RequestBody DictionaryDto dictionary, @AuthenticationPrincipal UserPrincipal user) {
     service.createCustomDictionary(dictionary, user.getId());
+  }
+
+  @PostMapping(value = SEARCH_WORD)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addNewWord(@AuthenticationPrincipal UserPrincipal user, @RequestBody DictionaryWordsDto dictionaryWords){
+      service.addNewWord(user.getId(),dictionaryWords);
   }
 }

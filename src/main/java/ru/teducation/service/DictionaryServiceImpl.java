@@ -3,7 +3,9 @@ package ru.teducation.service;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.DictionaryWordsDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
@@ -12,7 +14,9 @@ import ru.teducation.mapper.DictionaryWordsMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.DictionaryWords;
 import ru.teducation.model.User;
+import ru.teducation.model.Word;
 import ru.teducation.repository.DictionaryRepository;
+import ru.teducation.repository.DictionaryWordsRepository;
 import ru.teducation.repository.UserRepository;
 import ru.teducation.repository.WordRepository;
 
@@ -23,19 +27,23 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
   private final UserRepository userRepository;
-  public final DictionaryWordsMapper dictionaryWordsMapper;
+  private final DictionaryWordsMapper dictionaryWordsMapper;
+  private final DictionaryWordsRepository dictionaryWordsRepository;
+
 
   public DictionaryServiceImpl(
       DictionaryRepository repository,
       DictionaryMapper dictionaryMapper,
       WordRepository wordRepository,
       UserRepository userRepository,
-      DictionaryWordsMapper dictionaryWordsMapper) {
+      DictionaryWordsMapper dictionaryWordsMapper,
+      DictionaryWordsRepository dictionaryWordsRepository) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
     this.userRepository = userRepository;
     this.dictionaryWordsMapper = dictionaryWordsMapper;
+    this.dictionaryWordsRepository = dictionaryWordsRepository;
   }
 
   @Override
@@ -111,18 +119,36 @@ public class DictionaryServiceImpl implements DictionaryService {
     return wordRepository.searchWord(prefix);
   }
 
-//  @Override
-//  public void addNewWord(DictionaryDto dictionary, WordDto word, Integer userId) {
-//        User owner = userRepository.findById(userId).orElseThrow(
-//                () -> {
-//                    log.warn("Пользователь {} не найден", userId);
-//                    return new NotFoundException("Пользователь не найден");
-//                }
-//        );
-//
-//        int dictionaryId = dictionary.getId();
-//        int wordId = word.getId();
-//
-//      DictionaryWords word = d
-//  }
+  @Transactional
+  @Override
+  public void addNewWord(Integer userId, DictionaryWordsDto dictionaryWords) {
+      int wordId = dictionaryWords.getWordId();
+      int dictionaryId = dictionaryWords.getDictionaryId();
+
+      Word word = wordRepository.findById(wordId).orElseThrow(
+              () -> {
+                  throw new NotFoundException("Слово не найдено");
+              }
+      );
+
+      Dictionary dictionary = repository.findById(dictionaryId).orElseThrow(
+              () -> {
+                  throw new NotFoundException("Словарь не найдено");
+              }
+      );
+
+      if (!dictionary.getOwnerId().equals(userId)) {
+          throw new ConflictException("Нет прав");
+      }
+
+      if (dictionaryWordsRepository.existsByDictionaryIdAndWordId(dictionaryId,wordId)){
+          throw new ConflictException("Такое слово уже есть в словаре");
+      }
+
+      DictionaryWords newWord = new DictionaryWords();
+      newWord.setWord(word);
+      newWord.setDictionary(dictionary);
+
+      dictionaryWordsRepository.save(newWord);
+  }
 }
