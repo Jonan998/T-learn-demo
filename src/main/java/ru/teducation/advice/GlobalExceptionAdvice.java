@@ -54,7 +54,6 @@ public class GlobalExceptionAdvice {
                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
   }
 
-
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {

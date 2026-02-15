@@ -118,7 +118,6 @@ public class DictionaryServiceImpl implements DictionaryService {
         customDictionary.getIsPublic());
   }
 
-
   @Override
   public List<WordDto> searchWord(String prefix) {
     List<Word> words = wordRepository.findTop10ByEngLangStartingWithIgnoreCase(prefix);
