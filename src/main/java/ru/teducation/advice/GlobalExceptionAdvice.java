@@ -64,11 +64,6 @@ public class GlobalExceptionAdvice {
   @ExceptionHandler(ConflictException.class)
   public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
     return ResponseEntity.status(HttpStatus.CONFLICT)
-        .body(new ErrorResponse("conflict", ex.getMessage()));
-
-  @ExceptionHandler(ConflictException.class)
-  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
-    return ResponseEntity.status(HttpStatus.CONFLICT)
         .body(new ErrorResponse("conflict", "Такое название уже существует"));
   }
 }
