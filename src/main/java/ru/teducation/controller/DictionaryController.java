@@ -18,7 +18,8 @@ public class DictionaryController {
   private final DictionaryService service;
 
   private static final String CREATE_PATH = "/create";
-  private static final String SEARCH_WORD = "/add";
+  private static final String ADD_WORD = "/add";
+  private static final String SEARCH_WORD = "/search";
 
   public DictionaryController(DictionaryService service) {
     this.service = service;
@@ -47,9 +48,33 @@ public class DictionaryController {
     service.createCustomDictionary(dictionary, user.getId());
   }
 
-  @PostMapping(value = SEARCH_WORD)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addNewWord(@AuthenticationPrincipal UserPrincipal user, @RequestBody DictionaryWordsDto dictionaryWords){
-      service.addNewWord(user.getId(),dictionaryWords);
+  @PostMapping(value = ADD_WORD)
+  @ResponseStatus(HttpStatus.CREATED)
+  public void addNewWord(
+      @AuthenticationPrincipal UserPrincipal user,
+      @RequestBody DictionaryWordsDto dictionaryWords) {
+    service.addNewWord(user.getId(), dictionaryWords);
+  }
+
+  @GetMapping(value = SEARCH_WORD, produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<WordDto> searchWord(@RequestParam String prefix) {
+    return service.searchWord(prefix);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteDictionary(@PathVariable int id, @AuthenticationPrincipal UserPrincipal user) {
+
+    service.deleteDictionary(user.getId(), id);
+  }
+
+  @DeleteMapping("/{dictionaryId}/word/{wordId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void removeWord(
+      @PathVariable int dictionaryId,
+      @PathVariable int wordId,
+      @AuthenticationPrincipal UserPrincipal user) {
+
+    service.removeWord(user.getId(), dictionaryId, wordId);
   }
 }

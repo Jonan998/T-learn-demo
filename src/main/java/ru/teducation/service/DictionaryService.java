@@ -18,5 +18,9 @@ public interface DictionaryService {
 
   void addNewWord(Integer userId, DictionaryWordsDto dictionaryWords);
 
-  List<String> searchWord(String prefix);
+  List<WordDto> searchWord(String prefix);
+
+  void deleteDictionary(Integer userId, int dictionaryId);
+
+  void removeWord(Integer userId, int dictionaryId, int wordId);
 }

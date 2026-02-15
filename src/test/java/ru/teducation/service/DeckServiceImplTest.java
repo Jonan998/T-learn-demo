@@ -18,6 +18,7 @@ import ru.teducation.dto.DictionaryDto;
 import ru.teducation.dto.NewDeckDto;
 import ru.teducation.dto.WordDto;
 import ru.teducation.mapper.CardsWordsMapper;
+import ru.teducation.mapper.WordMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.User;
 import ru.teducation.model.Word;
@@ -43,6 +44,8 @@ class DeckServiceImplTest {
   @Mock private ValueOperations<String, Object> valueOperations;
 
   @Mock private CardsWordsMapper cardsWordsMapper;
+
+  @Mock private WordMapper wordMapper;
 
   private DeckService deckService;
 
@@ -75,7 +78,8 @@ class DeckServiceImplTest {
             mistralService,
             cardsWordsMapper);
 
-    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null,null, null, null,null);
+    this.dictionaryService =
+        new DictionaryServiceImpl(dictionaryRepository, null, null, null, null, null, null);
   }
 
   @AfterEach

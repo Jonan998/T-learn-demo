@@ -12,8 +12,8 @@ public class DictionaryWordsDto {
   private Integer wordId;
   private Integer dictionaryId;
 
-  public DictionaryWordsDto(Integer wordId, Integer dictionaryId){
-      this.wordId = wordId;
-      this.dictionaryId = dictionaryId;
+  public DictionaryWordsDto(Integer wordId, Integer dictionaryId) {
+    this.wordId = wordId;
+    this.dictionaryId = dictionaryId;
   }
 }
