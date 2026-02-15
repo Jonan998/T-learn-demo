@@ -129,6 +129,7 @@
             <version>${resilience.version}</version>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
@@ -142,6 +143,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+=======
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+
+
+>>>>>>> 8aa8c798d8fce2d55ed6920a8e86d5955acac02e
 
     </dependencies>
 

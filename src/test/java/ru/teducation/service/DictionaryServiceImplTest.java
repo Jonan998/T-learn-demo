@@ -36,9 +36,11 @@ class DictionaryServiceImplTest {
     context.setAuthentication(auth);
     SecurityContextHolder.setContext(context);
 
+
     dictionaryService =
         new DictionaryServiceImpl(
             dictionaryRepository, null, wordRepository, null, null, null, null);
+
   }
 
   @AfterEach

@@ -18,8 +18,11 @@ public class DictionaryController {
   private final DictionaryService service;
 
   private static final String CREATE_PATH = "/create";
+<<<<<<< HEAD
   private static final String ADD_WORD = "/add";
   private static final String SEARCH_WORD = "/search";
+=======
+>>>>>>> 8aa8c798d8fce2d55ed6920a8e86d5955acac02e
 
   public DictionaryController(DictionaryService service) {
     this.service = service;

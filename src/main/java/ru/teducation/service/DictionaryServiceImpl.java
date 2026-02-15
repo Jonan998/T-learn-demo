@@ -108,6 +108,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     Dictionary customDictionary = dictionaryMapper.toEntity(dictionary, owner);
+
     repository.save(customDictionary);
 
     log.info(
@@ -116,6 +117,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         owner.getId(),
         customDictionary.getIsPublic());
   }
+
 
   @Override
   public List<WordDto> searchWord(String prefix) {
