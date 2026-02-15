@@ -13,6 +13,7 @@ public interface DictionaryWordsRepository extends JpaRepository<DictionaryWords
       "SELECT dw FROM DictionaryWords dw JOIN FETCH dw.word JOIN FETCH dw.dictionary WHERE dw.id = :id")
   Optional<DictionaryWords> findByIdDict(@Param("id") Integer id);
 
-    boolean existsByDictionaryIdAndWordId(int dictionaryId, int wordId);
+  boolean existsByDictionaryIdAndWordId(int dictionaryId, int wordId);
 
+  Optional<DictionaryWords> findByDictionaryIdAndWordId(int dictionaryId, int wordId);
 }

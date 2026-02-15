@@ -11,6 +11,7 @@ import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.mapper.DictionaryMapper;
 import ru.teducation.mapper.DictionaryWordsMapper;
+import ru.teducation.mapper.WordMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.DictionaryWords;
 import ru.teducation.model.User;
@@ -29,7 +30,7 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final UserRepository userRepository;
   private final DictionaryWordsMapper dictionaryWordsMapper;
   private final DictionaryWordsRepository dictionaryWordsRepository;
-
+  private final WordMapper wordMapper;
 
   public DictionaryServiceImpl(
       DictionaryRepository repository,
@@ -37,13 +38,15 @@ public class DictionaryServiceImpl implements DictionaryService {
       WordRepository wordRepository,
       UserRepository userRepository,
       DictionaryWordsMapper dictionaryWordsMapper,
-      DictionaryWordsRepository dictionaryWordsRepository) {
+      DictionaryWordsRepository dictionaryWordsRepository,
+      WordMapper wordMapper) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
     this.userRepository = userRepository;
     this.dictionaryWordsMapper = dictionaryWordsMapper;
     this.dictionaryWordsRepository = dictionaryWordsRepository;
+    this.wordMapper = wordMapper;
   }
 
   @Override
@@ -115,40 +118,86 @@ public class DictionaryServiceImpl implements DictionaryService {
   }
 
   @Override
-  public List<String> searchWord(String prefix) {
-    return wordRepository.searchWord(prefix);
+  public List<WordDto> searchWord(String prefix) {
+    List<Word> words = wordRepository.findTop10ByEngLangStartingWithIgnoreCase(prefix);
+
+    return wordMapper.toDtoList(words);
   }
 
   @Transactional
   @Override
   public void addNewWord(Integer userId, DictionaryWordsDto dictionaryWords) {
-      int wordId = dictionaryWords.getWordId();
-      int dictionaryId = dictionaryWords.getDictionaryId();
+    int wordId = dictionaryWords.getWordId();
+    int dictionaryId = dictionaryWords.getDictionaryId();
 
-      Word word = wordRepository.findById(wordId).orElseThrow(
-              () -> {
+    Word word =
+        wordRepository
+            .findById(wordId)
+            .orElseThrow(
+                () -> {
                   throw new NotFoundException("Слово не найдено");
-              }
-      );
+                });
 
-      Dictionary dictionary = repository.findById(dictionaryId).orElseThrow(
-              () -> {
+    Dictionary dictionary =
+        repository
+            .findById(dictionaryId)
+            .orElseThrow(
+                () -> {
                   throw new NotFoundException("Словарь не найдено");
-              }
-      );
+                });
 
-      if (!dictionary.getOwnerId().equals(userId)) {
-          throw new ConflictException("Нет прав");
-      }
+    User owner = dictionary.getOwnerId();
+    if (owner == null || !owner.getId().equals(userId)) {
+      throw new ConflictException("Нет прав");
+    }
 
-      if (dictionaryWordsRepository.existsByDictionaryIdAndWordId(dictionaryId,wordId)){
-          throw new ConflictException("Такое слово уже есть в словаре");
-      }
+    if (dictionaryWordsRepository.existsByDictionaryIdAndWordId(dictionaryId, wordId)) {
+      throw new ConflictException("Такое слово уже есть в словаре");
+    }
 
-      DictionaryWords newWord = new DictionaryWords();
-      newWord.setWord(word);
-      newWord.setDictionary(dictionary);
+    DictionaryWords newWord = new DictionaryWords();
+    newWord.setWord(word);
+    newWord.setDictionary(dictionary);
 
-      dictionaryWordsRepository.save(newWord);
+    dictionaryWordsRepository.save(newWord);
+  }
+
+  @Transactional
+  @Override
+  public void deleteDictionary(Integer userId, int dictionaryId) {
+
+    Dictionary dictionary =
+        repository
+            .findById(dictionaryId)
+            .orElseThrow(() -> new NotFoundException("Словарь не найден"));
+
+    User owner = dictionary.getOwnerId();
+    if (owner == null || !owner.getId().equals(userId)) {
+      throw new ConflictException("Нет прав");
+    }
+
+    repository.delete(dictionary);
+  }
+
+  @Transactional
+  @Override
+  public void removeWord(Integer userId, int dictionaryId, int wordId) {
+
+    Dictionary dictionary =
+        repository
+            .findById(dictionaryId)
+            .orElseThrow(() -> new NotFoundException("Словарь не найден"));
+
+    User owner = dictionary.getOwnerId();
+    if (owner == null || !owner.getId().equals(userId)) {
+      throw new ConflictException("Нет прав");
+    }
+
+    DictionaryWords relation =
+        dictionaryWordsRepository
+            .findByDictionaryIdAndWordId(dictionaryId, wordId)
+            .orElseThrow(() -> new NotFoundException("Слово не найдено в словаре"));
+
+    dictionaryWordsRepository.delete(relation);
   }
 }
