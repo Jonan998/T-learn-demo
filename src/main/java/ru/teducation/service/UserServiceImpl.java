@@ -2,6 +2,7 @@ package ru.teducation.service;
 
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.teducation.dto.UserDto;
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
         dto.getLimitNew(),
         dto.getLimitRepeat());
 
-    if (dto.getPassword() == null || dto.getPassword().isBlank()) {
+    if (StringUtils.isEmpty(dto.getPassword())) {
       log.warn("Попытка изменить настройки без текущего пароля userId={}", userId);
       throw new IllegalArgumentException("Текущий пароль обязателен для изменения настроек");
     }
