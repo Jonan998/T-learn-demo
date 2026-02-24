@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.teducation.dto.ErrorResponse;
 import ru.teducation.exception.AuthenticationException;
@@ -44,5 +45,11 @@ public class GlobalExceptionAdvice {
         .body(
             new ErrorResponse(
                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
+    return new ErrorResponse("bad_request", ex.getMessage());
   }
 }

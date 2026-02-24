@@ -31,8 +31,8 @@ public class JwtUtil {
     Date exp = new Date(now.getTime() + expirationMillis());
 
     return Jwts.builder()
-        .subject(username)
-        .claim("userId", userId)
+        .subject(String.valueOf(userId))
+        .claim("username", username)
         .issuedAt(now)
         .expiration(exp)
         .signWith(getKey(), Jwts.SIG.HS256)

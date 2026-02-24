@@ -27,4 +27,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return new UserPrincipal(
         user.getId(), user.getName(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
   }
+
+  public UserDetails loadUserById(int userId) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userId));
+
+    return new UserPrincipal(
+        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+  }
 }

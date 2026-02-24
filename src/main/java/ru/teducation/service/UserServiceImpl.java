@@ -2,6 +2,7 @@ package ru.teducation.service;
 
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.teducation.dto.UserDto;
@@ -99,6 +100,16 @@ public class UserServiceImpl implements UserService {
         dto.getLimitNew(),
         dto.getLimitRepeat());
 
+    if (StringUtils.isEmpty(dto.getPassword())) {
+      log.warn("Попытка изменить настройки без текущего пароля userId={}", userId);
+      throw new IllegalArgumentException("Текущий пароль обязателен для изменения настроек");
+    }
+
+    if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+      log.warn("Неверный текущий пароль userId={}", userId);
+      throw new IllegalArgumentException("Неверный текущий пароль");
+    }
+
     if (dto.getName() != null) {
       log.debug("Обновление имени: {} -> {}", user.getName(), dto.getName());
       user.setName(dto.getName());
@@ -112,6 +123,18 @@ public class UserServiceImpl implements UserService {
     if (dto.getLimitRepeat() != null) {
       log.debug("Обновление limitRepeat: {} -> {}", user.getLimitRepeat(), dto.getLimitRepeat());
       user.setLimitRepeat(dto.getLimitRepeat());
+    }
+
+    if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
+
+      if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+        log.warn("Новый пароль не должен совпадать с прошлым");
+        throw new IllegalArgumentException("Новый пароль не должен совпадать с прошлым");
+      }
+
+      user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+
+      log.info("Пароль пользователя userId={} успешно обновлён", userId);
     }
 
     repository.save(user);
