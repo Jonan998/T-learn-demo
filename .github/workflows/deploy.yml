@@ -27,8 +27,11 @@ jobs:
       - name: Deploy to server
         run: |
           ssh prodserver "
+            set -e
             cd /home/project/T-learn-demo &&
-            git pull &&
+            git fetch origin &&
+            git reset --hard origin/master &&
+            git clean -fd &&
             mvn clean package &&
             docker-compose -f docker-compose.prod.yml down &&
             docker-compose -f docker-compose.prod.yml up --build -d
