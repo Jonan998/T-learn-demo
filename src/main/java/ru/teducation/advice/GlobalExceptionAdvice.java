@@ -54,6 +54,7 @@ public class GlobalExceptionAdvice {
                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
   }
 
+<<<<<<< HEAD
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
@@ -64,5 +65,11 @@ public class GlobalExceptionAdvice {
   public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
     return ResponseEntity.status(HttpStatus.CONFLICT)
         .body(new ErrorResponse("conflict", ex.getMessage()));
+=======
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(new ErrorResponse("conflict", "Такое название уже существует"));
+>>>>>>> 8aa8c79 (custom-dictionary)
   }
 }

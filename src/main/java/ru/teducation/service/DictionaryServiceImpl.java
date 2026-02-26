@@ -27,8 +27,7 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryRepository repository;
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
-  private final UserRepository userRepository;
-  private final DictionaryWordsMapper dictionaryWordsMapper;
+  private final UserRepository userRepository;;
   private final DictionaryWordsRepository dictionaryWordsRepository;
   private final WordMapper wordMapper;
 
@@ -37,14 +36,12 @@ public class DictionaryServiceImpl implements DictionaryService {
       DictionaryMapper dictionaryMapper,
       WordRepository wordRepository,
       UserRepository userRepository,
-      DictionaryWordsMapper dictionaryWordsMapper,
       DictionaryWordsRepository dictionaryWordsRepository,
       WordMapper wordMapper) {
     this.repository = repository;
     this.dictionaryMapper = dictionaryMapper;
     this.wordRepository = wordRepository;
     this.userRepository = userRepository;
-    this.dictionaryWordsMapper = dictionaryWordsMapper;
     this.dictionaryWordsRepository = dictionaryWordsRepository;
     this.wordMapper = wordMapper;
   }
