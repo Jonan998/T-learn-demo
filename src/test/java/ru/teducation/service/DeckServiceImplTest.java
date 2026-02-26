@@ -75,7 +75,7 @@ class DeckServiceImplTest {
             mistralService,
             cardsWordsMapper);
 
-    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null, null, null);
+    this.dictionaryService = new DictionaryServiceImpl(dictionaryRepository, null,null, null, null);
   }
 
   @AfterEach
