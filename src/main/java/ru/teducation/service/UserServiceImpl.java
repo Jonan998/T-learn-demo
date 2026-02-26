@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
       user.setLimitRepeat(dto.getLimitRepeat());
     }
 
-    if (dto.getNewPassword() != null && !dto.getNewPassword().isBlank()) {
+    if (StringUtils.isEmpty(dto.getPassword())) {
 
       if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
         log.warn("Новый пароль не должен совпадать с прошлым");
