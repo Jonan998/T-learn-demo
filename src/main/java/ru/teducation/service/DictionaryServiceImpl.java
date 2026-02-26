@@ -125,6 +125,15 @@ public class DictionaryServiceImpl implements DictionaryService {
     int wordId = dictionaryWords.getWordId();
     int dictionaryId = dictionaryWords.getDictionaryId();
 
+    User owner =
+        userRepository
+            .findById(userId)
+            .orElseThrow(
+                () -> {
+                  log.warn("Пользователь {} не найден", userId);
+                  return new NotFoundException("Пользователь не найден");
+                });
+
     Word word =
         wordRepository
             .findById(wordId)

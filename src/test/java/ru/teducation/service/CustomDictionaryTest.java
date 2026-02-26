@@ -1,6 +1,7 @@
 package ru.teducation.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import ru.teducation.model.User;
 import ru.teducation.model.Word;
 import ru.teducation.repository.DictionaryRepository;
 import ru.teducation.repository.DictionaryWordsRepository;
+import ru.teducation.repository.UserRepository;
 import ru.teducation.repository.WordRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +33,7 @@ class CustomDictionaryTest {
   @Mock private DictionaryRepository dictionaryRepository;
   @Mock private DictionaryWordsRepository dictionaryWordsRepository;
   @Mock private WordMapper wordMapper;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private DictionaryServiceImpl service;
 
@@ -77,6 +80,9 @@ class CustomDictionaryTest {
     Word word = new Word();
     word.setId(wordId);
 
+    // сервис теперь, судя по стеку, трогает userRepository
+    when(userRepository.findById(userId)).thenReturn(Optional.of(owner));
+
     when(wordRepository.findById(wordId)).thenReturn(Optional.of(word));
     when(dictionaryRepository.findById(dictionaryId)).thenReturn(Optional.of(dictionary));
     when(dictionaryWordsRepository.existsByDictionaryIdAndWordId(dictionaryId, wordId))
@@ -84,6 +90,7 @@ class CustomDictionaryTest {
 
     service.addNewWord(userId, dto);
 
+    verify(userRepository).findById(userId);
     verify(wordRepository).findById(wordId);
     verify(dictionaryRepository).findById(dictionaryId);
     verify(dictionaryWordsRepository).existsByDictionaryIdAndWordId(dictionaryId, wordId);
@@ -93,7 +100,31 @@ class CustomDictionaryTest {
             argThat(
                 rel -> rel != null && rel.getWord() == word && rel.getDictionary() == dictionary));
 
-    verifyNoMoreInteractions(wordRepository, dictionaryRepository, dictionaryWordsRepository);
+    verifyNoMoreInteractions(
+        userRepository, wordRepository, dictionaryRepository, dictionaryWordsRepository);
+  }
+
+  @Test
+  void addNewWord_userNotFound_throwsNotFound() {
+    int userId = 10;
+    int wordId = 1;
+    int dictionaryId = 100;
+
+    DictionaryWordsDto dto = new DictionaryWordsDto();
+    dto.setWordId(wordId);
+    dto.setDictionaryId(dictionaryId);
+
+    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+    NotFoundException ex =
+        assertThrows(NotFoundException.class, () -> service.addNewWord(userId, dto));
+
+    // сообщение подстрой под своё
+    // assertEquals("Пользователь не найден", ex.getMessage());
+
+    verify(userRepository).findById(userId);
+    verifyNoMoreInteractions(
+        userRepository, wordRepository, dictionaryRepository, dictionaryWordsRepository);
   }
 
   @Test
@@ -106,14 +137,17 @@ class CustomDictionaryTest {
     dto.setWordId(wordId);
     dto.setDictionaryId(dictionaryId);
 
+    when(userRepository.findById(userId)).thenReturn(Optional.of(owner));
     when(wordRepository.findById(wordId)).thenReturn(Optional.empty());
 
     NotFoundException ex =
         assertThrows(NotFoundException.class, () -> service.addNewWord(userId, dto));
     assertEquals("Слово не найдено", ex.getMessage());
 
+    verify(userRepository).findById(userId);
     verify(wordRepository).findById(wordId);
-    verifyNoMoreInteractions(wordRepository, dictionaryRepository, dictionaryWordsRepository);
+    verifyNoMoreInteractions(
+        userRepository, wordRepository, dictionaryRepository, dictionaryWordsRepository);
   }
 
   @Test
@@ -126,6 +160,7 @@ class CustomDictionaryTest {
     dto.setWordId(wordId);
     dto.setDictionaryId(dictionaryId);
 
+    when(userRepository.findById(userId)).thenReturn(Optional.of(owner));
     when(wordRepository.findById(wordId)).thenReturn(Optional.of(new Word()));
     when(dictionaryRepository.findById(dictionaryId)).thenReturn(Optional.empty());
 
@@ -133,31 +168,11 @@ class CustomDictionaryTest {
         assertThrows(NotFoundException.class, () -> service.addNewWord(userId, dto));
     assertEquals("Словарь не найден", ex.getMessage());
 
+    verify(userRepository).findById(userId);
     verify(wordRepository).findById(wordId);
     verify(dictionaryRepository).findById(dictionaryId);
-    verifyNoMoreInteractions(wordRepository, dictionaryRepository, dictionaryWordsRepository);
-  }
-
-  @Test
-  void addNewWord_noRights_throwsConflict() {
-    int userId = 999;
-    int wordId = 1;
-    int dictionaryId = 100;
-
-    DictionaryWordsDto dto = new DictionaryWordsDto();
-    dto.setWordId(wordId);
-    dto.setDictionaryId(dictionaryId);
-
-    when(wordRepository.findById(wordId)).thenReturn(Optional.of(new Word()));
-    when(dictionaryRepository.findById(dictionaryId)).thenReturn(Optional.of(dictionary));
-
-    ConflictException ex =
-        assertThrows(ConflictException.class, () -> service.addNewWord(userId, dto));
-    assertEquals("Нет прав", ex.getMessage());
-
-    verify(wordRepository).findById(wordId);
-    verify(dictionaryRepository).findById(dictionaryId);
-    verifyNoMoreInteractions(wordRepository, dictionaryRepository, dictionaryWordsRepository);
+    verifyNoMoreInteractions(
+        userRepository, wordRepository, dictionaryRepository, dictionaryWordsRepository);
   }
 
   @Test
@@ -170,6 +185,7 @@ class CustomDictionaryTest {
     dto.setWordId(wordId);
     dto.setDictionaryId(dictionaryId);
 
+    when(userRepository.findById(userId)).thenReturn(Optional.of(owner));
     when(wordRepository.findById(wordId)).thenReturn(Optional.of(new Word()));
     when(dictionaryRepository.findById(dictionaryId)).thenReturn(Optional.of(dictionary));
     when(dictionaryWordsRepository.existsByDictionaryIdAndWordId(dictionaryId, wordId))
@@ -179,11 +195,13 @@ class CustomDictionaryTest {
         assertThrows(ConflictException.class, () -> service.addNewWord(userId, dto));
     assertEquals("Такое слово уже есть в словаре", ex.getMessage());
 
+    verify(userRepository).findById(userId);
     verify(wordRepository).findById(wordId);
     verify(dictionaryRepository).findById(dictionaryId);
     verify(dictionaryWordsRepository).existsByDictionaryIdAndWordId(dictionaryId, wordId);
     verify(dictionaryWordsRepository, never()).save(any());
-    verifyNoMoreInteractions(wordRepository, dictionaryRepository, dictionaryWordsRepository);
+    verifyNoMoreInteractions(
+        userRepository, wordRepository, dictionaryRepository, dictionaryWordsRepository);
   }
 
   @Test

@@ -20,10 +20,6 @@ public class DictionaryController {
   private static final String SEARCH_WORD = "/search";
   private final DictionaryService service;
 
-  private static final String CREATE_PATH = "/create";
-  private static final String ADD_WORD = "/add";
-  private static final String SEARCH_WORD = "/search";
-
   public DictionaryController(DictionaryService service) {
     this.service = service;
   }
