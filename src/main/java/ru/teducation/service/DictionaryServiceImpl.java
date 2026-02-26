@@ -26,11 +26,8 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryRepository repository;
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
-<<<<<<< HEAD
-  private final UserRepository userRepository;;
-=======
   private final UserRepository userRepository;
->>>>>>> 0174004 (upd)
+  ;
   private final DictionaryWordsRepository dictionaryWordsRepository;
   private final WordMapper wordMapper;
 
