@@ -54,6 +54,7 @@ public class GlobalExceptionAdvice {
                                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
     }
 
+<<<<<<< HEAD
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
@@ -66,6 +67,13 @@ public class GlobalExceptionAdvice {
         log.warn("Conflict: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse("conflict", ex.getMessage()));
+=======
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
+    return new ErrorResponse("bad_request", ex.getMessage());
+  }
+>>>>>>> 0009d12 (теперь точно все)
 
     }
 }
