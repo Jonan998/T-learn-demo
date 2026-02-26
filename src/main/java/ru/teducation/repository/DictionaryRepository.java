@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.teducation.dto.DictionaryDto;
 import ru.teducation.model.Dictionary;
-import ru.teducation.model.User;
 
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Integer> {

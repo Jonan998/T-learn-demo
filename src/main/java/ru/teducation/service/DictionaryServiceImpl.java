@@ -10,7 +10,6 @@ import ru.teducation.dto.WordDto;
 import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.mapper.DictionaryMapper;
-import ru.teducation.mapper.DictionaryWordsMapper;
 import ru.teducation.mapper.WordMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.DictionaryWords;
@@ -135,7 +134,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         repository
             .findById(dictionaryId)
             .orElseThrow(() -> new NotFoundException("Словарь не найден"));
-    
+
     if (owner == null || !owner.getId().equals(userId)) {
       throw new ConflictException("Нет прав");
     }

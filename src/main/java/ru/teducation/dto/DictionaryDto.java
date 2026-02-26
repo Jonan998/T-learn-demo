@@ -3,7 +3,6 @@ package ru.teducation.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import ru.teducation.model.User;
 
 @Getter
 @Setter
@@ -32,7 +31,8 @@ public class DictionaryDto {
     this.language = language;
   }
 
-  public DictionaryDto(Integer id, String name, String language, Integer ownerId, Boolean isPublic) {
+  public DictionaryDto(
+      Integer id, String name, String language, Integer ownerId, Boolean isPublic) {
     this.id = id;
     this.name = name;
     this.language = language;
