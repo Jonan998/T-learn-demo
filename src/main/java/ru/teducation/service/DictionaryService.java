@@ -2,6 +2,7 @@ package ru.teducation.service;
 
 import java.util.List;
 import ru.teducation.dto.DictionaryDto;
+import ru.teducation.dto.DictionaryWordsDto;
 import ru.teducation.dto.WordDto;
 
 public interface DictionaryService {
@@ -12,4 +13,14 @@ public interface DictionaryService {
   List<DictionaryDto> getUserDictionaries(int userId);
 
   List<WordDto> getWordsByDictionaryId(int dictionaryId);
+
+  void createCustomDictionary(DictionaryDto dictionary, Integer userId);
+
+  void addNewWord(Integer userId, DictionaryWordsDto dictionaryWords);
+
+  List<WordDto> searchWord(String prefix);
+
+  void deleteDictionary(Integer userId, int dictionaryId);
+
+  void removeWord(Integer userId, int dictionaryId, int wordId);
 }

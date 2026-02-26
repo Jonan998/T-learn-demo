@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.teducation.dto.UserDto;
 import ru.teducation.dto.UserLimitsView;
+import ru.teducation.exception.InvalidPasswordException;
 import ru.teducation.mapper.UserMapper;
 import ru.teducation.model.User;
 import ru.teducation.repository.UserRepository;
@@ -102,12 +103,12 @@ public class UserServiceImpl implements UserService {
 
     if (StringUtils.isEmpty(dto.getPassword())) {
       log.warn("Попытка изменить настройки без текущего пароля userId={}", userId);
-      throw new IllegalArgumentException("Текущий пароль обязателен для изменения настроек");
+      throw new InvalidPasswordException("Текущий пароль обязателен для изменения настроек");
     }
 
     if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
       log.warn("Неверный текущий пароль userId={}", userId);
-      throw new IllegalArgumentException("Неверный текущий пароль");
+      throw new InvalidPasswordException("Неверный текущий пароль");
     }
 
     if (dto.getName() != null) {
@@ -129,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
       if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
         log.warn("Новый пароль не должен совпадать с прошлым");
-        throw new IllegalArgumentException("Новый пароль не должен совпадать с прошлым");
+        throw new InvalidPasswordException("Новый пароль не должен совпадать с прошлым");
       }
 
       user.setPassword(passwordEncoder.encode(dto.getNewPassword()));

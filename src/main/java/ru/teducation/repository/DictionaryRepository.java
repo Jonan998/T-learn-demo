@@ -25,4 +25,6 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
 """,
       nativeQuery = true)
   List<DictionaryDto> findUserDictionaries(@Param("userId") Integer userId);
+
+  boolean existsByNameAndOwner_Id(String name, Integer ownerId);
 }

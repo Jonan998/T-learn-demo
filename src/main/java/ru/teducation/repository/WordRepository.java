@@ -70,4 +70,6 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
         """,
       nativeQuery = true)
   List<WordDto> findWordsByDictionaryId(@Param("dictionaryId") Integer dictionaryId);
+
+  List<Word> findTop10ByEngLangStartingWithIgnoreCase(String prefix);
 }

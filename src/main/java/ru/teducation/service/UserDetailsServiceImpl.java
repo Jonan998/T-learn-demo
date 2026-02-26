@@ -16,6 +16,7 @@ import ru.teducation.repository.UserRepository;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final UserRepository userRepository;
+  private static final String ROLE_USER = "ROLE_USER";
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -25,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
     return new UserPrincipal(
-        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority(ROLE_USER)));
   }
 
   public UserDetails loadUserById(int userId) {
@@ -35,6 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userId));
 
     return new UserPrincipal(
-        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        user.getId(), user.getName(), List.of(new SimpleGrantedAuthority(ROLE_USER)));
   }
 }
