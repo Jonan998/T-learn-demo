@@ -3,7 +3,6 @@ package ru.teducation.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import ru.teducation.model.User;
 
 @Getter
 @Setter
@@ -21,7 +20,7 @@ public class DictionaryDto {
   private String language;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private User ownerId;
+  private Integer ownerId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Boolean isPublic;
@@ -30,13 +29,5 @@ public class DictionaryDto {
     this.id = id;
     this.name = name;
     this.language = language;
-  }
-
-  public DictionaryDto(Integer id, String name, String language, User ownerId, Boolean isPublic) {
-    this.id = id;
-    this.name = name;
-    this.language = language;
-    this.ownerId = ownerId;
-    this.isPublic = isPublic;
   }
 }

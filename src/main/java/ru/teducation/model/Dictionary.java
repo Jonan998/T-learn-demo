@@ -24,7 +24,7 @@ public class Dictionary {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_id", nullable = false)
-  private User ownerId;
+  private User owner;
 
   @Column(name = "is_public")
   private Boolean isPublic;
@@ -55,11 +55,11 @@ public class Dictionary {
   }
 
   public Dictionary(
-      String name, String description, String language, User ownerId, Boolean isPublic) {
+      String name, String description, String language, User owner, Boolean isPublic) {
     this.name = name;
     this.description = description;
     this.language = language;
-    this.ownerId = ownerId;
+    this.owner = owner;
     this.isPublic = isPublic;
   }
 }

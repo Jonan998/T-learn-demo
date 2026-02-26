@@ -38,6 +38,7 @@ class DictionaryServiceImplTest {
     dictionaryService =
         new DictionaryServiceImpl(
             dictionaryRepository, null, wordRepository, null, null, null);
+
   }
 
   @AfterEach

@@ -10,7 +10,6 @@ import ru.teducation.dto.WordDto;
 import ru.teducation.exception.ConflictException;
 import ru.teducation.exception.NotFoundException;
 import ru.teducation.mapper.DictionaryMapper;
-import ru.teducation.mapper.DictionaryWordsMapper;
 import ru.teducation.mapper.WordMapper;
 import ru.teducation.model.Dictionary;
 import ru.teducation.model.DictionaryWords;
@@ -27,7 +26,11 @@ public class DictionaryServiceImpl implements DictionaryService {
   private final DictionaryRepository repository;
   private final DictionaryMapper dictionaryMapper;
   private final WordRepository wordRepository;
+<<<<<<< HEAD
   private final UserRepository userRepository;;
+=======
+  private final UserRepository userRepository;
+>>>>>>> 0174004 (upd)
   private final DictionaryWordsRepository dictionaryWordsRepository;
   private final WordMapper wordMapper;
 
@@ -98,7 +101,7 @@ public class DictionaryServiceImpl implements DictionaryService {
                   return new NotFoundException("Пользователь не найден");
                 });
 
-    if (repository.existsByNameAndOwnerId(dictionary.getName(), owner)) {
+    if (repository.existsByNameAndOwner_Id(dictionary.getName(), owner.getId())) {
       log.warn(
           "Попытка создать дубликат словаря name='{}' для userId={}", dictionary.getName(), userId);
       throw new ConflictException("Словарь с таким именем уже есть");
@@ -130,20 +133,14 @@ public class DictionaryServiceImpl implements DictionaryService {
     Word word =
         wordRepository
             .findById(wordId)
-            .orElseThrow(
-                () -> {
-                  throw new NotFoundException("Слово не найдено");
-                });
+            .orElseThrow(() -> new NotFoundException("Слово не найдено"));
 
     Dictionary dictionary =
         repository
             .findById(dictionaryId)
-            .orElseThrow(
-                () -> {
-                  throw new NotFoundException("Словарь не найдено");
-                });
+            .orElseThrow(() -> new NotFoundException("Словарь не найден"));
 
-    User owner = dictionary.getOwnerId();
+    User owner = dictionary.getOwner();
     if (owner == null || !owner.getId().equals(userId)) {
       throw new ConflictException("Нет прав");
     }
@@ -168,7 +165,7 @@ public class DictionaryServiceImpl implements DictionaryService {
             .findById(dictionaryId)
             .orElseThrow(() -> new NotFoundException("Словарь не найден"));
 
-    User owner = dictionary.getOwnerId();
+    User owner = dictionary.getOwner();
     if (owner == null || !owner.getId().equals(userId)) {
       throw new ConflictException("Нет прав");
     }
@@ -185,7 +182,7 @@ public class DictionaryServiceImpl implements DictionaryService {
             .findById(dictionaryId)
             .orElseThrow(() -> new NotFoundException("Словарь не найден"));
 
-    User owner = dictionary.getOwnerId();
+    User owner = dictionary.getOwner();
     if (owner == null || !owner.getId().equals(userId)) {
       throw new ConflictException("Нет прав");
     }

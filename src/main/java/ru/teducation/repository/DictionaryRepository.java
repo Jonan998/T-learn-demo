@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.teducation.dto.DictionaryDto;
 import ru.teducation.model.Dictionary;
-import ru.teducation.model.User;
 
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Integer> {
@@ -27,5 +26,5 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Integer>
       nativeQuery = true)
   List<DictionaryDto> findUserDictionaries(@Param("userId") Integer userId);
 
-  boolean existsByNameAndOwnerId(String name, User owner);
+  boolean existsByNameAndOwner_Id(String name, Integer ownerId);
 }

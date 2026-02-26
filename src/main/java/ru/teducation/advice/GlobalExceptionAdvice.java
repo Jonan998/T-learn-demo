@@ -16,11 +16,12 @@ import ru.teducation.exception.TooManyRequestException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse("validation_error", "Некорректные данные запроса"));
-    }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
+    log.warn("Validation failed: {}", ex.getBindingResult());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ErrorResponse("validation_error", "Некорректные данные запроса"));
+  }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
@@ -54,26 +55,19 @@ public class GlobalExceptionAdvice {
                                 "server_error", "Произошла непредвиденная ошибка. Мы уже разбираемся."));
     }
 
-<<<<<<< HEAD
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
-        log.warn("Conflict: {}", ex.getMessage());
-        return new ErrorResponse("bad_request", ex.getMessage());
-    }
-
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
-        log.warn("Conflict: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse("conflict", ex.getMessage()));
-=======
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorResponse handleIllegalArgument(IllegalArgumentException ex) {
+    log.warn("Bad request: {}", ex.getMessage());
     return new ErrorResponse("bad_request", ex.getMessage());
   }
->>>>>>> 0009d12 (теперь точно все)
 
-    }
+
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
+    log.warn("Conflict: {}", ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(new ErrorResponse("conflict", "Такое название уже существует"));
+  }
 }
