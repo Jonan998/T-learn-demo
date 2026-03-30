@@ -2,6 +2,8 @@ package ru.teducation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,12 @@ public class User {
 
   @Column(name = "limit_repeat")
   private int limitRepeat;
+
+  @Column(name = "current_streak")
+  private Integer currentStreak = 0;
+
+  @Column(name = "last_activity_date")
+  private LocalDate lastActivityDate;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @JsonIgnore
