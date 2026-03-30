@@ -34,7 +34,8 @@ class CardsWordsServiceImplTest {
 
     context.setAuthentication(auth);
     SecurityContextHolder.setContext(context);
-    cardsWordsService = new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null, null);
+    cardsWordsService =
+        new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null, null);
   }
 
   @AfterEach
