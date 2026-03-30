@@ -1,5 +1,6 @@
 package ru.teducation.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.teducation.dto.WordDto;
 import ru.teducation.model.CardsWords;
-import java.time.LocalDateTime;
 
 @Repository
 public interface CardsWordsRepository extends JpaRepository<CardsWords, Integer> {
@@ -63,13 +63,13 @@ public interface CardsWordsRepository extends JpaRepository<CardsWords, Integer>
 
   Optional<CardsWords> findByUserIdAndWordId(int userId, int wordId);
 
-  @Query("SELECT cw.learnedAt FROM CardsWords cw " +
-            "WHERE cw.user.id = :userId " +
-            "AND cw.learnedAt BETWEEN :start AND :end " +
-            "ORDER BY cw.learnedAt ASC")
+  @Query(
+      "SELECT cw.learnedAt FROM CardsWords cw "
+          + "WHERE cw.user.id = :userId "
+          + "AND cw.learnedAt BETWEEN :start AND :end "
+          + "ORDER BY cw.learnedAt ASC")
   List<LocalDateTime> findLearnedDates(
-          @Param("userId") Integer userId,
-          @Param("start") LocalDateTime start,
-          @Param("end") LocalDateTime end
-  );
+      @Param("userId") Integer userId,
+      @Param("start") LocalDateTime start,
+      @Param("end") LocalDateTime end);
 }

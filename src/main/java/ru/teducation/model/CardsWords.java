@@ -38,7 +38,12 @@ public class CardsWords {
   private LocalDateTime learnedAt;
 
   public CardsWords(
-      User user, Word word, Dictionary dictionary, Integer studyLevel, LocalDateTime nextReview, LocalDateTime learnedAt) {
+      User user,
+      Word word,
+      Dictionary dictionary,
+      Integer studyLevel,
+      LocalDateTime nextReview,
+      LocalDateTime learnedAt) {
     this.user = user;
     this.word = word;
     this.dictionary = dictionary;

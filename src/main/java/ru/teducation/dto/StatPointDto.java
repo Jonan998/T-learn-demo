@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class StatPointDto {
-    private String label;
-    private Long value;
+  private String label;
+  private Long value;
 }

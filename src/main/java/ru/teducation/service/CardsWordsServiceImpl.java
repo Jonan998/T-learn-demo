@@ -32,17 +32,18 @@ public class CardsWordsServiceImpl implements CardsWordsService {
   private final StreakService streakService;
 
   public CardsWordsServiceImpl(
-          CardsWordsRepository cardsWordsRepository,
-          UserRepository userRepository,
-          WordRepository wordRepository,
-          DictionaryRepository dictionaryRepository,
-          CardsWordsMapper cardsWordsMapper, StreakService streakService) {
+      CardsWordsRepository cardsWordsRepository,
+      UserRepository userRepository,
+      WordRepository wordRepository,
+      DictionaryRepository dictionaryRepository,
+      CardsWordsMapper cardsWordsMapper,
+      StreakService streakService) {
     this.cardsWordsRepository = cardsWordsRepository;
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.dictionaryRepository = dictionaryRepository;
     this.cardsWordsMapper = cardsWordsMapper;
-      this.streakService = streakService;
+    this.streakService = streakService;
   }
 
   @Override
@@ -109,11 +110,11 @@ public class CardsWordsServiceImpl implements CardsWordsService {
       int newLvl = dto.getStudyLevel();
 
       if (newLvl == 6) {
-          if (card.getLearnedAt() == null) {
-              card.setLearnedAt(LocalDateTime.now());
-          }
+        if (card.getLearnedAt() == null) {
+          card.setLearnedAt(LocalDateTime.now());
+        }
       } else {
-          card.setLearnedAt(null);
+        card.setLearnedAt(null);
       }
 
       log.debug(
@@ -140,7 +141,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
     }
 
     if (!updates.isEmpty()) {
-        streakService.updateStreak(userId);
+      streakService.updateStreak(userId);
     }
     log.info("Обновление статусов слов завершено: userId={}, обновлено={}", userId, updates.size());
   }
