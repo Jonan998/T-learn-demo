@@ -29,18 +29,20 @@ public class CardsWordsServiceImpl implements CardsWordsService {
   private final WordRepository wordRepository;
   private final DictionaryRepository dictionaryRepository;
   private final CardsWordsMapper cardsWordsMapper;
+  private final StreakService streakService;
 
   public CardsWordsServiceImpl(
-      CardsWordsRepository cardsWordsRepository,
-      UserRepository userRepository,
-      WordRepository wordRepository,
-      DictionaryRepository dictionaryRepository,
-      CardsWordsMapper cardsWordsMapper) {
+          CardsWordsRepository cardsWordsRepository,
+          UserRepository userRepository,
+          WordRepository wordRepository,
+          DictionaryRepository dictionaryRepository,
+          CardsWordsMapper cardsWordsMapper, StreakService streakService) {
     this.cardsWordsRepository = cardsWordsRepository;
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.dictionaryRepository = dictionaryRepository;
     this.cardsWordsMapper = cardsWordsMapper;
+      this.streakService = streakService;
   }
 
   @Override
@@ -135,6 +137,10 @@ public class CardsWordsServiceImpl implements CardsWordsService {
       log.debug("Следующее повторение для wordId={} назначено на {}", dto.getWordId(), next);
 
       cardsWordsRepository.save(card);
+    }
+
+    if (!updates.isEmpty()) {
+        streakService.updateStreak(userId);
     }
     log.info("Обновление статусов слов завершено: userId={}, обновлено={}", userId, updates.size());
   }
