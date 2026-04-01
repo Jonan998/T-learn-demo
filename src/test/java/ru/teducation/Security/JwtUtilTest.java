@@ -34,8 +34,8 @@ class JwtUtilTest {
 
     Claims claims = jwt.getClaims(token);
 
-    assertEquals("alice", claims.getSubject());
-    assertEquals(42, ((Number) claims.get("userId")).intValue());
+    assertEquals("42", claims.getSubject());
+    assertEquals("alice", claims.get("username", String.class));
     assertFalse(jwt.isExpired(token));
   }
 

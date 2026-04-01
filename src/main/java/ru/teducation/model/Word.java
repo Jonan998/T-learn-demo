@@ -32,7 +32,7 @@ public class Word {
   @Builder.Default
   private List<CardsWords> cardsWords = new ArrayList<>();
 
-  @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonIgnore
   @Builder.Default
   private List<DictionaryWords> dictionaryWords = new ArrayList<>();
@@ -46,5 +46,12 @@ public class Word {
   public Word(String engLang, String rusLang) {
     this.engLang = engLang;
     this.rusLang = rusLang;
+  }
+
+  public Word(Integer id, String engLang, String rusLang, String transcription) {
+    this.id = id;
+    this.engLang = engLang;
+    this.rusLang = rusLang;
+    this.transcription = transcription;
   }
 }
