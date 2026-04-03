@@ -83,16 +83,15 @@ public class UserServiceImpl implements UserService {
 
     return dto;
   }
-
-  @Override
-  public void updateUserSettings(int userId, UserDto dto) {
+@Override
+public void updateUserSettings(int userId, UserDto dto) {
     log.info("Обновление настроек пользователя userId={}", userId);
 
     User user = repository.findById(userId).orElse(null);
 
     if (user == null) {
-      log.error("Не удалось обновить настройки — пользователь {} не найден", userId);
-      return;
+        log.error("Не удалось обновить настройки — пользователь {} не найден", userId);
+        return;
     }
 
     log.debug(
@@ -102,44 +101,41 @@ public class UserServiceImpl implements UserService {
         dto.getLimitRepeat());
 
     if (StringUtils.isEmpty(dto.getPassword())) {
-      log.warn("Попытка изменить настройки без текущего пароля userId={}", userId);
-      throw new InvalidPasswordException("Текущий пароль обязателен для изменения настроек");
+        log.warn("Попытка изменить настройки без текущего пароля userId={}", userId);
+        throw new InvalidPasswordException("Текущий пароль обязателен для изменения настроек");
     }
 
     if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-      log.warn("Неверный текущий пароль userId={}", userId);
-      throw new InvalidPasswordException("Неверный текущий пароль");
+        log.warn("Неверный текущий пароль userId={}", userId);
+        throw new InvalidPasswordException("Неверный текущий пароль");
     }
 
     if (dto.getName() != null) {
-      log.debug("Обновление имени: {} -> {}", user.getName(), dto.getName());
-      user.setName(dto.getName());
+        log.debug("Обновление имени: {} -> {}", user.getName(), dto.getName());
+        user.setName(dto.getName());
     }
 
     if (dto.getLimitNew() != null) {
-      log.debug("Обновление limitNew: {} -> {}", user.getLimitNew(), dto.getLimitNew());
-      user.setLimitNew(dto.getLimitNew());
+        log.debug("Обновление limitNew: {} -> {}", user.getLimitNew(), dto.getLimitNew());
+        user.setLimitNew(dto.getLimitNew());
     }
 
     if (dto.getLimitRepeat() != null) {
-      log.debug("Обновление limitRepeat: {} -> {}", user.getLimitRepeat(), dto.getLimitRepeat());
-      user.setLimitRepeat(dto.getLimitRepeat());
+        log.debug("Обновление limitRepeat: {} -> {}", user.getLimitRepeat(), dto.getLimitRepeat());
+        user.setLimitRepeat(dto.getLimitRepeat());
     }
 
-    if (StringUtils.isEmpty(dto.getPassword())) {
+    if (!StringUtils.isEmpty(dto.getNewPassword())) {
+        if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
+            log.warn("Новый пароль не должен совпадать с прошлым");
+            throw new InvalidPasswordException("Новый пароль не должен совпадать с прошлым");
+        }
 
-      if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
-        log.warn("Новый пароль не должен совпадать с прошлым");
-        throw new InvalidPasswordException("Новый пароль не должен совпадать с прошлым");
-      }
-
-      user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-
-      log.info("Пароль пользователя userId={} успешно обновлён", userId);
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        log.info("Пароль пользователя userId={} успешно обновлён", userId);
     }
 
     repository.save(user);
-
     log.info("Настройки пользователя userId={} успешно обновлены", userId);
-  }
+}
 }
