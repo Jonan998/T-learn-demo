@@ -16,7 +16,6 @@ import ru.teducation.exception.TooManyRequestException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex) {
         log.warn("Validation failed: {}", ex.getBindingResult());
