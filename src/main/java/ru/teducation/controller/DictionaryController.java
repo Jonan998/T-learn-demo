@@ -2,6 +2,7 @@ package ru.teducation.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,20 +25,15 @@ public class DictionaryController {
     this.service = service;
   }
 
-  @PostMapping
-  public void createDictionary(
-      @RequestParam String name, @RequestParam String description, @RequestParam String language) {
-    service.createDictionary(name, description, language);
-  }
-
-  @GetMapping(value = "/{id:\\\\d+}", produces = "application/json; charset=UTF-8")
-  public DictionaryDto getDictionary(@PathVariable int id) {
-    return service.getDictionary(id);
-  }
-
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<WordDto> getWordsByDictionaryId(@AuthenticationPrincipal UserPrincipal user) {
+  public List<Map<String, Object>> getWordsByDictionaryId(
+      @AuthenticationPrincipal UserPrincipal user) {
     return service.getWordsByDictionaryId(user.getId());
+  }
+
+  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public DictionaryDto getDictionary(@PathVariable Integer id) {
+    return service.getDictionary(id);
   }
 
   @PostMapping(value = CREATE_PATH)
