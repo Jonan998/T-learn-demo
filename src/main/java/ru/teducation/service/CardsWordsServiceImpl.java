@@ -25,7 +25,7 @@ import ru.teducation.repository.WordRepository;
 @Service
 public class CardsWordsServiceImpl implements CardsWordsService {
 
-    private static final int LEARNED_LEVEL = 6;
+  private static final int LEARNED_LEVEL = 6;
   private final CardsWordsRepository cardsWordsRepository;
   private final UserRepository userRepository;
   private final WordRepository wordRepository;
@@ -130,7 +130,8 @@ public class CardsWordsServiceImpl implements CardsWordsService {
         case 3 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusDays(1);
         case 4 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusWeeks(1);
         case 5 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(1);
-          case LEARNED_LEVEL -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
+        case LEARNED_LEVEL ->
+            next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
         default -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
       }
 
