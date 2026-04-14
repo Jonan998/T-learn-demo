@@ -1,5 +1,6 @@
 package ru.teducation.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.teducation.dto.AnswerRequestDto;
@@ -22,9 +23,7 @@ public class TrainingServiceImpl implements TrainingService {
             .orElseThrow(() -> new NotFoundException("Слово не найдено"));
 
     String actualWord = word.getEngLang();
-
-    String userAnswer = request.getUserAnswer() != null ? request.getUserAnswer() : "";
-
+    String userAnswer = Optional.ofNullable(request.getUserAnswer()).orElse("");
     boolean isCorrect = actualWord.trim().equalsIgnoreCase(userAnswer.trim());
 
     return new AnswerResponseDto(isCorrect, actualWord);
