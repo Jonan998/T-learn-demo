@@ -20,7 +20,7 @@ import ru.teducation.repository.CardsWordsRepository;
 class CardsWordsServiceImplTest {
 
   @Mock private CardsWordsRepository cardsWordsRepository;
-
+  @Mock private StreakService streakService;
   private CardsWordsService cardsWordsService;
 
   @BeforeEach
@@ -34,7 +34,8 @@ class CardsWordsServiceImplTest {
 
     context.setAuthentication(auth);
     SecurityContextHolder.setContext(context);
-    cardsWordsService = new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null);
+    cardsWordsService =
+        new CardsWordsServiceImpl(cardsWordsRepository, null, null, null, null, streakService);
   }
 
   @AfterEach

@@ -34,6 +34,9 @@ public class CardsWords {
   @Column(name = "next_review")
   private LocalDateTime nextReview;
 
+  @Column(name = "learned_at")
+  private LocalDateTime learnedAt;
+
   public CardsWords(
       User user, Word word, Dictionary dictionary, Integer studyLevel, LocalDateTime nextReview) {
     this.user = user;

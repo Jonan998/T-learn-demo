@@ -1,22 +1,32 @@
 spring:
+  session:
+    jdbc:
+      initialize-schema: always
   datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
+    # Для Docker используем host.docker.internal
+    url: jdbc:postgresql://host.docker.internal:5432/testdb
     username: postgres
     password: Azazazru228
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
   security:
     basic:
       enabled: false
   data:
     redis:
-      host: localhost
+      host: host.docker.internal
       port: 6379
+
 logging:
   level:
     root: INFO
     org.springframework: INFO
-    com.example: DEBUG
+    ru.teducation: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{} - %msg%n"

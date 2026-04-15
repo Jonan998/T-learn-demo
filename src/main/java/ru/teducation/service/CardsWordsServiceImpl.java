@@ -24,23 +24,28 @@ import ru.teducation.repository.WordRepository;
 @Slf4j
 @Service
 public class CardsWordsServiceImpl implements CardsWordsService {
+
+  private static final int LEARNED_LEVEL = 6;
   private final CardsWordsRepository cardsWordsRepository;
   private final UserRepository userRepository;
   private final WordRepository wordRepository;
   private final DictionaryRepository dictionaryRepository;
   private final CardsWordsMapper cardsWordsMapper;
+  private final StreakService streakService;
 
   public CardsWordsServiceImpl(
       CardsWordsRepository cardsWordsRepository,
       UserRepository userRepository,
       WordRepository wordRepository,
       DictionaryRepository dictionaryRepository,
-      CardsWordsMapper cardsWordsMapper) {
+      CardsWordsMapper cardsWordsMapper,
+      StreakService streakService) {
     this.cardsWordsRepository = cardsWordsRepository;
     this.userRepository = userRepository;
     this.wordRepository = wordRepository;
     this.dictionaryRepository = dictionaryRepository;
     this.cardsWordsMapper = cardsWordsMapper;
+    this.streakService = streakService;
   }
 
   @Override
@@ -105,6 +110,14 @@ public class CardsWordsServiceImpl implements CardsWordsService {
       int oldLvl = card.getStudyLevel();
       int newLvl = dto.getStudyLevel();
 
+      if (newLvl == LEARNED_LEVEL) {
+        if (card.getLearnedAt() == null) {
+          card.setLearnedAt(LocalDateTime.now());
+        }
+      } else {
+        card.setLearnedAt(null);
+      }
+
       log.debug(
           "Старый уровень={}, новый уровень={} для wordId={}", oldLvl, newLvl, dto.getWordId());
 
@@ -117,7 +130,8 @@ public class CardsWordsServiceImpl implements CardsWordsService {
         case 3 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusDays(1);
         case 4 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusWeeks(1);
         case 5 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(1);
-        case 6 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
+        case LEARNED_LEVEL ->
+            next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
         default -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
       }
 
@@ -126,6 +140,10 @@ public class CardsWordsServiceImpl implements CardsWordsService {
       log.debug("Следующее повторение для wordId={} назначено на {}", dto.getWordId(), next);
 
       cardsWordsRepository.save(card);
+    }
+
+    if (!updates.isEmpty()) {
+      streakService.updateStreak(userId);
     }
     log.info("Обновление статусов слов завершено: userId={}, обновлено={}", userId, updates.size());
   }
