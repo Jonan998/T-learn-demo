@@ -17,15 +17,15 @@ public class StatisticsController {
 
   @GetMapping("/year")
   public List<StatPointDto> getYearStats(
-      @AuthenticationPrincipal UserPrincipal user, @RequestParam int year) {
+      @AuthenticationPrincipal UserPrincipal user, @RequestParam Integer year) {
     return statisticsService.getYearStats(user.getId(), year);
   }
 
   @GetMapping("/month")
   public List<StatPointDto> getMonthStats(
       @AuthenticationPrincipal UserPrincipal user,
-      @RequestParam int year,
-      @RequestParam int month) {
+      @RequestParam Integer year,
+      @RequestParam Integer month) {
     return statisticsService.getMonthStats(user.getId(), year, month);
   }
 }
