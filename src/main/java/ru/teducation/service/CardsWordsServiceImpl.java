@@ -24,6 +24,8 @@ import ru.teducation.repository.WordRepository;
 @Slf4j
 @Service
 public class CardsWordsServiceImpl implements CardsWordsService {
+
+  private static final int LEARNED_LEVEL = 6;
   private final CardsWordsRepository cardsWordsRepository;
   private final UserRepository userRepository;
   private final WordRepository wordRepository;
@@ -62,7 +64,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
     Optional<Dictionary> dictionary = dictionaryRepository.findById(dictionaryId);
 
     CardsWords card =
-        new CardsWords(user.get(), word.get(), dictionary.get(), studyLvl, nextReview, null);
+        new CardsWords(user.get(), word.get(), dictionary.get(), studyLvl, nextReview);
     cardsWordsRepository.save(card);
   }
 
@@ -80,8 +82,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
               word.get(),
               dictionary.get(),
               cardsWordsDto.getStudyLevel(),
-              cardsWordsDto.getNextReview(),
-              null);
+              cardsWordsDto.getNextReview());
       CardsWords savedCard = cardsWordsRepository.save(card);
       return cardsWordsMapper.toDto(savedCard);
     }
@@ -109,7 +110,7 @@ public class CardsWordsServiceImpl implements CardsWordsService {
       int oldLvl = card.getStudyLevel();
       int newLvl = dto.getStudyLevel();
 
-      if (newLvl == 6) {
+      if (newLvl == LEARNED_LEVEL) {
         if (card.getLearnedAt() == null) {
           card.setLearnedAt(LocalDateTime.now());
         }
@@ -129,7 +130,8 @@ public class CardsWordsServiceImpl implements CardsWordsService {
         case 3 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusDays(1);
         case 4 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusWeeks(1);
         case 5 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(1);
-        case 6 -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
+        case LEARNED_LEVEL ->
+            next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusMonths(3);
         default -> next = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
       }
 

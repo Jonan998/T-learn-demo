@@ -126,20 +126,17 @@ public class UserServiceImpl implements UserService {
       user.setLimitRepeat(dto.getLimitRepeat());
     }
 
-    if (StringUtils.isEmpty(dto.getPassword())) {
-
+    if (!StringUtils.isEmpty(dto.getNewPassword())) {
       if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword())) {
         log.warn("Новый пароль не должен совпадать с прошлым");
         throw new InvalidPasswordException("Новый пароль не должен совпадать с прошлым");
       }
 
       user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-
       log.info("Пароль пользователя userId={} успешно обновлён", userId);
     }
 
     repository.save(user);
-
     log.info("Настройки пользователя userId={} успешно обновлены", userId);
   }
 }

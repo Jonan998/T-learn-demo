@@ -1,6 +1,9 @@
 package ru.teducation.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,14 +79,40 @@ public class DictionaryServiceImpl implements DictionaryService {
   }
 
   @Override
-  public List<WordDto> getWordsByDictionaryId(int dictionaryId) {
-    log.info("Получение слов по dictionaryId={}", dictionaryId);
+  public List<Map<String, Object>> getWordsByDictionaryId(int userId) {
+    List<Map<String, Object>> dbResults = wordRepository.findDictionaryWithWords(userId);
 
-    List<WordDto> words = wordRepository.findWordsByDictionaryId(dictionaryId);
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    log.debug("Найдено {} слов в dictionaryId={}", words.size(), dictionaryId);
+    return dbResults.stream()
+        .map(
+            dbResult -> {
+              Map<String, Object> result = new HashMap<>(dbResult);
+              Object words = result.get("words");
 
-    return words;
+              try {
+                if (words instanceof String wordsJson) {
+                  List<Map<String, Object>> parsedWords =
+                      objectMapper.readValue(
+                          wordsJson,
+                          new com.fasterxml.jackson.core.type.TypeReference<
+                              List<Map<String, Object>>>() {});
+                  result.put("words", parsedWords);
+                } else if (words != null) {
+                  List<Map<String, Object>> parsedWords =
+                      objectMapper.readValue(
+                          words.toString(),
+                          new com.fasterxml.jackson.core.type.TypeReference<
+                              List<Map<String, Object>>>() {});
+                  result.put("words", parsedWords);
+                }
+              } catch (Exception e) {
+                throw new RuntimeException("Не удалось распарсить words", e);
+              }
+
+              return result;
+            })
+        .toList();
   }
 
   @Override

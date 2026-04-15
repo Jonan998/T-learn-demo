@@ -1,6 +1,7 @@
 package ru.teducation.service;
 
 import java.util.List;
+import java.util.Map;
 import ru.teducation.dto.DictionaryDto;
 import ru.teducation.dto.DictionaryWordsDto;
 import ru.teducation.dto.WordDto;
@@ -12,7 +13,7 @@ public interface DictionaryService {
 
   List<DictionaryDto> getUserDictionaries(int userId);
 
-  List<WordDto> getWordsByDictionaryId(int dictionaryId);
+  List<Map<String, Object>> getWordsByDictionaryId(int dictionaryId);
 
   void createCustomDictionary(DictionaryDto dictionary, Integer userId);
 

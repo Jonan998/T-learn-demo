@@ -1,12 +1,12 @@
 package ru.teducation.repository;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.teducation.dto.NewDeckDto;
-import ru.teducation.dto.WordDto;
 import ru.teducation.model.Word;
 
 @Repository
@@ -59,17 +59,43 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
   @Query(
       value =
           """
-       SELECT
-          w.id,
-          w.eng_lang,
-          w.rus_lang,
-          w.transcription
-       FROM words w
-       JOIN dictionary_words dw ON dw.word_id = w.id
-       WHERE dw.dictionary_id = :dictionaryId
+        SELECT
+            d.id AS "id",
+            d.name AS "name",
+            d.owner_id AS "ownerId",
+            COALESCE(
+                jsonb_agg(
+                    jsonb_build_object(
+                        'id', w.id,
+                        'engLang', w.eng_lang,
+                        'rusLang', w.rus_lang
+                    )
+                    ORDER BY w.id
+                ) FILTER (
+                    WHERE w.id IS NOT NULL
+                      AND (
+                          d.owner_id IS NOT NULL
+                          OR EXISTS (
+                              SELECT 1
+                              FROM cards_words cw
+                              WHERE cw.dictionary_id = d.id
+                                AND cw.word_id = w.id
+                                AND cw.user_id = :userId
+                          )
+                      )
+                ),
+                '[]'::jsonb
+            ) AS words
+        FROM dictionary d
+        LEFT JOIN dictionary_words dw ON dw.dictionary_id = d.id
+        LEFT JOIN words w ON w.id = dw.word_id
+        WHERE d.owner_id IS NULL
+           OR d.owner_id = :userId
+        GROUP BY d.id, d.name, d.owner_id
+        ORDER BY d.id
         """,
       nativeQuery = true)
-  List<WordDto> findWordsByDictionaryId(@Param("dictionaryId") Integer dictionaryId);
+  List<Map<String, Object>> findDictionaryWithWords(@Param("userId") Integer userId);
 
   List<Word> findTop10ByEngLangStartingWithIgnoreCase(String prefix);
 }
