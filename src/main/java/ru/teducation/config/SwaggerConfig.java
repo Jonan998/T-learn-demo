@@ -29,4 +29,3 @@ public class SwaggerConfig {
         .info(new Info().title("T-Education API").version("1.0"));
   }
 }
-

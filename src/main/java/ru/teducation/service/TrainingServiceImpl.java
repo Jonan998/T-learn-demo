@@ -28,4 +28,3 @@ public class TrainingServiceImpl implements TrainingService {
     return new AnswerResponseDto(isCorrect, actualWord);
   }
 }
-
