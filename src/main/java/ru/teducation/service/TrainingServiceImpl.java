@@ -12,23 +12,20 @@ import ru.teducation.repository.WordRepository;
 @Service
 @RequiredArgsConstructor
 public class TrainingServiceImpl implements TrainingService {
+  private final WordRepository wordRepository;
 
-    private final WordRepository wordRepository;
-
-    @Override
-    public AnswerResponseDto checkAnswer(AnswerRequestDto request) {
-        Word word =
-                wordRepository
-                        .findById(request.getWordId())
-                        .orElseThrow(() -> new NotFoundException("Слово не найдено"));
-
+  @Override
+  public AnswerResponseDto checkAnswer(AnswerRequestDto request) {
+    Word word =
+        wordRepository
+            .findById(request.getWordId())
+            .orElseThrow(() -> new NotFoundException("Слово не найдено"));
 
     String actualWord = word.getEngLang();
-
-    String userAnswer = request.getUserAnswer() != null ? request.getUserAnswer() : "";
-
+    String userAnswer = Optional.ofNullable(request.getUserAnswer()).orElse("");
     boolean isCorrect = actualWord.trim().equalsIgnoreCase(userAnswer.trim());
 
-        return new AnswerResponseDto(isCorrect, actualWord);
-    }
+    return new AnswerResponseDto(isCorrect, actualWord);
+  }
 }
+
