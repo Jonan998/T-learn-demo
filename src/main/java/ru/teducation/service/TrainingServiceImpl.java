@@ -22,9 +22,12 @@ public class TrainingServiceImpl implements TrainingService {
                         .findById(request.getWordId())
                         .orElseThrow(() -> new NotFoundException("Слово не найдено"));
 
-        String actualWord = word.getEngLang();
-        String userAnswer = Optional.ofNullable(request.getUserAnswer()).orElse("");
-        boolean isCorrect = actualWord.trim().equalsIgnoreCase(userAnswer.trim());
+
+    String actualWord = word.getEngLang();
+
+    String userAnswer = request.getUserAnswer() != null ? request.getUserAnswer() : "";
+
+    boolean isCorrect = actualWord.trim().equalsIgnoreCase(userAnswer.trim());
 
         return new AnswerResponseDto(isCorrect, actualWord);
     }
