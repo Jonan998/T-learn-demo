@@ -25,6 +25,8 @@ management:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
+  kafka:
+    bootstrap-servers: kafka:9092
 resilience4j:
   ratelimiter:
     configs:
