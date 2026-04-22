@@ -64,4 +64,14 @@ public class User {
     this.limitNew = limitNew;
     this.limitRepeat = limitRepeat;
   }
+
+  public User(
+      String name, String password, LocalDateTime createdAtNew, LocalDateTime createdAtRepeat) {
+    this.name = name;
+    this.password = password;
+    this.createdAtNew = createdAtNew;
+    this.createdAtRepeat = createdAtRepeat;
+    this.limitNew = 0;
+    this.limitRepeat = 0;
+  }
 }

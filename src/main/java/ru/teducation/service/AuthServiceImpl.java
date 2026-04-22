@@ -49,8 +49,6 @@ public class AuthServiceImpl implements AuthService {
         request.getUsername(),
         passwordEncoder.encode(request.getPassword()),
         LocalDateTime.now(),
-        LocalDateTime.now(),
-        0,
-        0);
+        LocalDateTime.now());
   }
 }
