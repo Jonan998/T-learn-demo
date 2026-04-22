@@ -15,13 +15,14 @@ import ru.teducation.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl {
+public class AuthServiceImpl implements AuthService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
   private final UserCreatedEventProducer userCreatedEventProducer;
 
+  @Override
   public AuthResponse loginOrRegister(LoginRequest request) {
     Optional<User> userOpt = userRepository.findByName(request.getUsername());
 

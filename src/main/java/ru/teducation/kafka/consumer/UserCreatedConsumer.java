@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import ru.teducation.kafka.KafkaConstants;
 import ru.teducation.kafka.event.UserCreatedEvent;
 import ru.teducation.model.User;
 import ru.teducation.repository.UserRepository;
@@ -18,7 +19,9 @@ public class UserCreatedConsumer {
 
   private final UserRepository userRepository;
 
-  @KafkaListener(topics = "user-created", groupId = "user-init-group")
+  @KafkaListener(
+      topics = KafkaConstants.USER_CREATED_TOPIC,
+      groupId = KafkaConstants.USER_CREATED_GROUP)
   public void handle(UserCreatedEvent event) {
     log.info("Получено Kafka событие user-created для userId={}", event.getUserId());
 
