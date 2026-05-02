@@ -12,7 +12,6 @@ import ru.teducation.repository.WordRepository;
 @Service
 @RequiredArgsConstructor
 public class TrainingServiceImpl implements TrainingService {
-
   private final WordRepository wordRepository;
 
   @Override
