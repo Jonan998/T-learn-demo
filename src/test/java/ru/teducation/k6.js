@@ -2,15 +2,15 @@ import http from "k6/http";
 import { check, group, sleep } from "k6";
 
 export const options = {
-  vus: Number(__ENV.VUS || 200),
-  duration: __ENV.DURATION || "60s",
+  vus: Number(__ENV.VUS || 60),
+  duration: __ENV.DURATION || "600s",
   thresholds: {
     http_req_duration: ["p(95)<800"],
     http_req_failed: ["rate<0.2"],
   },
 };
 
-const BASE_URL = __ENV.BASE_URL || "http://217.71.129.139:4186";
+const BASE_URL = __ENV.BASE_URL || "http://217.71.129.139:5139";
 const USERNAME = __ENV.K6_USER || "john";
 const PASSWORD = __ENV.K6_PASSWORD || "QWERTY";
 
